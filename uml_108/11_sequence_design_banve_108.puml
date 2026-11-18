@@ -1,0 +1,91 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor "Khách/NV" as Actor
+boundary "GDChinh.jsp" as GD0
+boundary "GDChonPhim.jsp" as GD1
+participant "Phim108DAO" as PDAO
+boundary "GDChonSuatChieu.jsp" as GD2
+participant "SuatChieu108DAO" as SCDAO
+boundary "GDChonGhe.jsp" as GD3
+participant "PhongChieu108DAO" as PCDAO
+participant "Ghe108DAO" as GDAO
+boundary "GDThanhToan.jsp" as GD4
+participant "HoaDon108DAO" as HDDAO
+participant "Ve108DAO" as VDAO
+entity "Phim108" as E1
+entity "SuatChieu108" as E2
+entity "PhongChieu108" as E3
+entity "Ghe108" as E4
+
+Actor -> GD0 : 1: chọn mua vé
+activate GD0
+GD0 -> GD1 : 2: call
+activate GD1
+GD1 -> PDAO : 3: call getAllPhim()
+activate PDAO
+PDAO -> E1 : 4: gọi Phim108
+activate E1
+E1 --> PDAO : 5: return
+deactivate E1
+PDAO --> GD1 : 6: return List<Phim108>
+deactivate PDAO
+GD1 --> Actor : 7: hiển thị
+Actor -> GD1 : 8: chọn phim + click tiếp tục
+
+GD1 -> GD2 : 9: call
+activate GD2
+GD2 -> SCDAO : 10: call getSuatChieuByPhim()
+activate SCDAO
+SCDAO -> E2 : 11: gọi SuatChieu108
+activate E2
+E2 --> SCDAO : 12: return
+deactivate E2
+SCDAO --> GD2 : 13: return List<SuatChieu108>
+deactivate SCDAO
+GD2 --> Actor : 14: hiển thị
+Actor -> GD2 : 15: chọn suất + click tiếp tục
+
+GD2 -> GD3 : 16: call
+activate GD3
+GD3 -> PCDAO : 17: call getPhongChieuBySuatChieu()
+activate PCDAO
+PCDAO -> E3 : 18: gọi PhongChieu108
+activate E3
+E3 --> PCDAO : 19: return
+deactivate E3
+PCDAO --> GD3 : 20: return PhongChieu108
+deactivate PCDAO
+
+GD3 -> GDAO : 21: call getGheByPhongChieu()
+activate GDAO
+GDAO -> E4 : 22: gọi Ghe108
+activate E4
+E4 --> GDAO : 23: return
+deactivate E4
+GDAO --> GD3 : 24: return List<Ghe108>
+deactivate GDAO
+GD3 --> Actor : 25: hiển thị
+Actor -> GD3 : 26: chọn ghế + click tiếp tục
+
+GD3 -> GD4 : 27: call
+activate GD4
+GD4 --> Actor : 28: hiển thị hóa đơn
+Actor -> GD4 : 29: click thanh toán
+GD4 -> HDDAO : 30: call luuHoaDon()
+activate HDDAO
+HDDAO --> GD4 : 31: return idHoaDon
+deactivate HDDAO
+GD4 -> VDAO : 32: call luuVe()
+activate VDAO
+VDAO --> GD4 : 33: return success
+deactivate VDAO
+GD4 --> Actor : 34: hiển thị mua thành công
+deactivate GD4
+deactivate GD3
+deactivate GD2
+deactivate GD1
+deactivate GD0
+@enduml

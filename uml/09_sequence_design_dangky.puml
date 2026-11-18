@@ -1,0 +1,66 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+
+title BIỂU ĐỒ TRÌNH TỰ THIẾT KẾ CHI TIẾT (DESIGN SEQUENCE DIAGRAM)\nCA SỬ DỤNG: ĐĂNG KÝ THÀNH VIÊN
+
+actor "Khách hàng" as KH
+boundary "view: DangKyThanhVienFrm" as View
+control "ctrl: KhachHangController" as Ctrl
+participant "khDAO: KhachHangDAO" as KHDAO
+participant "theDAO: TheThanhVienDAO" as TheDAO
+database "db: DBConnection" as DB
+entity "kh: KhachHang" as EntKH
+entity "the: TheThanhVien" as EntThe
+
+KH -> View : nhapThongTin(hoTen, sdt, email, cccd, matKhau, ngaySinh)
+KH -> View : click btnDangKy_Click()
+activate View
+
+View -> Ctrl : dangKyThanhVien(khachHangDTO)
+activate Ctrl
+
+Ctrl -> KHDAO : kiemTraTrung(sdt, email, cccd)
+activate KHDAO
+KHDAO -> DB : executeQuery("SELECT id FROM tblKhachHang WHERE...")
+activate DB
+DB --> KHDAO : ResultSet (count)
+deactivate DB
+KHDAO --> Ctrl : isExisted (boolean)
+deactivate KHDAO
+
+alt isExisted == true
+    Ctrl --> View : return Result(status=FAIL, message="Thông tin đã tồn tại!")
+    View --> KH : hienThiLoi("SĐT hoặc Email hoặc CCCD đã được đăng ký!")
+else isExisted == false
+    Ctrl -> EntThe ** : create(maThe="MB" + random, hangThe="Standard", diem=0)
+    Ctrl -> EntKH ** : create(hoTen, sdt, email, cccd, hashPass, ngaySinh)
+    
+    Ctrl -> KHDAO : themKhachHang(kh)
+    activate KHDAO
+    KHDAO -> DB : executeUpdate("INSERT INTO tblNguoiDung...", "INSERT INTO tblKhachHang...")
+    activate DB
+    DB --> KHDAO : newKhachHangId
+    deactivate DB
+    KHDAO --> Ctrl : newKhachHangId
+    deactivate KHDAO
+
+    Ctrl -> TheDAO : themThe(the, newKhachHangId)
+    activate TheDAO
+    TheDAO -> DB : executeUpdate("INSERT INTO tblTheThanhVien (maThe, hangThe, idKH)...")
+    activate DB
+    DB --> TheDAO : rowsAffected (1)
+    deactivate DB
+    TheDAO --> Ctrl : true
+    deactivate TheDAO
+
+    Ctrl --> View : return Result(status=SUCCESS, maThe=the.getMaThe(), hoTen=kh.getHoTen())
+    deactivate Ctrl
+
+    View --> KH : hienThiThanhCong("Đăng ký thành viên thành công! Mã thẻ: " + maThe)
+    deactivate View
+end
+
+@enduml

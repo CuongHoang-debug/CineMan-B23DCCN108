@@ -1,0 +1,47 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor "Khách hàng" as KH
+boundary "GDDangKy108.jsp" as View
+participant "KhachHang108DAO" as KHDAO
+participant "TheThanhVien108DAO" as TheDAO
+boundary "GDKetQuaDangKy108.jsp" as Result
+database "CSDL SQLite" as DB
+
+KH -> View : 1: nhập thông tin + click Lưu
+activate View
+View -> KHDAO : 2: call kiemTraTrung()
+activate KHDAO
+KHDAO -> DB : 3: executeQuery()
+activate DB
+DB --> KHDAO : 4: return kết quả
+deactivate DB
+KHDAO --> View : 5: hợp lệ
+deactivate KHDAO
+
+View -> KHDAO : 6: call themKhachHang(kh)
+activate KHDAO
+KHDAO -> DB : 7: executeUpdate()
+activate DB
+DB --> KHDAO : 8: idKhachHangMoi
+deactivate DB
+KHDAO --> View : 9: return true
+deactivate KHDAO
+
+View -> TheDAO : 10: call themThe(the)
+activate TheDAO
+TheDAO -> DB : 11: executeUpdate()
+activate DB
+DB --> TheDAO : 12: return 1
+deactivate DB
+TheDAO --> View : 13: return true
+deactivate TheDAO
+
+View -> Result : 14: chuyển tiếp kết quả
+activate Result
+Result --> KH : 15: hiển thị đăng ký thành công & mã thẻ
+deactivate Result
+deactivate View
+@enduml

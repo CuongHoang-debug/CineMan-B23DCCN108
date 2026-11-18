@@ -1,0 +1,129 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam linetype ortho
+
+title LƯỢC ĐỒ CƠ SỞ DỮ LIỆU QUAN HỆ (ERD) - HỆ THỐNG CINEMAN
+
+entity "tblNguoiDung" as tblNguoiDung {
+    * id : INT <<PK, AI>>
+    --
+    * taiKhoan : VARCHAR(50) <<UNIQUE>>
+    * matKhau : VARCHAR(255)
+    * hoTen : VARCHAR(100)
+    * sdt : VARCHAR(15) <<UNIQUE>>
+    * email : VARCHAR(100) <<UNIQUE>>
+    * vaiTro : VARCHAR(20) -- 'QUAN_LY', 'BAN_HANG', 'KHACH_HANG'
+    ngayTao : DATETIME
+}
+
+entity "tblNhanVien" as tblNhanVien {
+    * id : INT <<PK, FK>>
+    --
+    * chucVu : VARCHAR(50)
+    caLamViec : VARCHAR(50)
+    luongCoBan : FLOAT
+}
+
+entity "tblKhachHang" as tblKhachHang {
+    * id : INT <<PK, FK>>
+    --
+    * cccd : VARCHAR(20) <<UNIQUE>>
+    ngaySinh : DATE
+    diaChi : VARCHAR(255)
+}
+
+entity "tblTheThanhVien" as tblTheThanhVien {
+    * id : INT <<PK, AI>>
+    --
+    * maThe : VARCHAR(30) <<UNIQUE>>
+    * idKhachHang : INT <<FK, UNIQUE>>
+    * hangThe : VARCHAR(20) -- 'Standard', 'Silver', 'Gold', 'VIP'
+    * diemTichLuy : INT
+    ngayCap : DATE
+    trangThai : VARCHAR(20)
+}
+
+entity "tblPhim" as tblPhim {
+    * id : INT <<PK, AI>>
+    --
+    * tenPhim : VARCHAR(255)
+    theLoai : VARCHAR(100)
+    thoiLuong : INT -- Phút
+    daoDien : VARCHAR(100)
+    dienVien : VARCHAR(255)
+    doTuoi : VARCHAR(10) -- 'P', 'T13', 'T16', 'T18'
+    poster : VARCHAR(255)
+    moTa : TEXT
+    trangThai : VARCHAR(20) -- 'DANG_CHIEU', 'SAP_CHIEU', 'NGUNG_CHIEU'
+}
+
+entity "tblPhongChieu" as tblPhongChieu {
+    * id : INT <<PK, AI>>
+    --
+    * tenPhong : VARCHAR(50)
+    * loaiPhong : VARCHAR(20) -- '2D', '3D', 'IMAX'
+    * tongSoGhe : INT
+}
+
+entity "tblGhe" as tblGhe {
+    * id : INT <<PK, AI>>
+    --
+    * idPhong : INT <<FK>>
+    * maGhe : VARCHAR(10) -- Ví dụ: A01, B05...
+    * soHang : VARCHAR(5)
+    * soCot : INT
+    * loaiGhe : VARCHAR(20) -- 'THUONG', 'VIP', 'DOI'
+    * phuThu : FLOAT
+}
+
+entity "tblLichChieu" as tblLichChieu {
+    * id : INT <<PK, AI>>
+    --
+    * idPhim : INT <<FK>>
+    * idPhong : INT <<FK>>
+    * ngayChieu : DATE
+    * gioBatDau : TIME
+    * gioKetThuc : TIME
+    * giaVeGoc : FLOAT
+}
+
+entity "tblHoaDon" as tblHoaDon {
+    * id : INT <<PK, AI>>
+    --
+    * maHD : VARCHAR(30) <<UNIQUE>>
+    * idNhanVien : INT <<FK>>
+    idKhachHang : INT <<FK>> -- Nullable nếu khách vãng lai
+    * ngayLap : DATETIME
+    * tongTien : FLOAT
+    * giamGia : FLOAT
+    * thanhTien : FLOAT
+    * phuongThucTT : VARCHAR(30) -- 'TIEN_MAT', 'CHUYEN_KHOAN', 'THE'
+}
+
+entity "tblVe" as tblVe {
+    * id : INT <<PK, AI>>
+    --
+    * maVe : VARCHAR(30) <<UNIQUE>>
+    * idLichChieu : INT <<FK>>
+    * idGhe : INT <<FK>>
+    * idHoaDon : INT <<FK>>
+    * giaBan : FLOAT
+    ngayBan : DATETIME
+    trangThai : VARCHAR(20) -- 'DA_BAN', 'DA_HUY'
+}
+
+' Moi quan he quan he
+tblNguoiDung ||--o| tblNhanVien : 1 - 0..1 (Kế thừa)
+tblNguoiDung ||--o| tblKhachHang : 1 - 0..1 (Kế thừa)
+tblKhachHang ||--|| tblTheThanhVien : 1 - 1
+tblPhongChieu ||--|{ tblGhe : 1 - N
+tblPhim ||--o{ tblLichChieu : 1 - N
+tblPhongChieu ||--o{ tblLichChieu : 1 - N
+tblNhanVien ||--o{ tblHoaDon : 1 - N
+tblKhachHang ||--o{ tblHoaDon : 1 - N
+tblHoaDon ||--|{ tblVe : 1 - N
+tblLichChieu ||--|{ tblVe : 1 - N
+tblGhe ||--|{ tblVe : 1 - N
+
+@enduml

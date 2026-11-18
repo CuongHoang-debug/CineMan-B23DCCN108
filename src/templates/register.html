@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}Đăng ký thành viên - CineMan{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-3">
+    <div class="col-md-7 col-lg-6">
+        <div class="card card-custom p-4">
+            <div class="text-center mb-3">
+                <i class="fa-solid fa-id-card text-warning fa-3x mb-2"></i>
+                <h3 class="fw-bold">Đăng Ký Thẻ Thành Viên CineMan</h3>
+                <p class="text-secondary small mb-2">Tích điểm đổi vé, nhận ưu đãi độc quyền lên tới 15%</p>
+                <div class="alert alert-dark border-secondary p-2 text-start small mb-0">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <strong class="text-warning"><i class="fa-solid fa-list-check me-1"></i> Luồng nghiệp vụ đăng ký thành viên:</strong>
+                        <span class="badge bg-info text-dark">Module 1</span>
+                    </div>
+                    <div class="text-muted" style="font-size: 0.8rem;">
+                        1. Chọn Đăng ký → 2. Nhập thông tin cá nhân → 3. Click Đăng ký → 4. Lưu CSDL & Cấp mã thẻ
+                    </div>
+                    <div class="mt-2 text-end">
+                        <button type="button" class="btn btn-outline-warning btn-sm py-0" onclick="fillDemoCustomer()" style="font-size: 0.78rem;">
+                            <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Điền nhanh thông tin mẫu (Nguyễn Tuấn Anh)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST" action="{{ url_for('register') }}" id="registerForm">
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label class="form-label text-light">Họ và tên <span class="text-danger">*</span></label>
+                        <input type="text" name="hoTen" id="inputHoTen" class="form-control bg-dark border-secondary text-light" placeholder="Ví dụ: Nguyễn Tuấn Anh" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label text-light">Số điện thoại <span class="text-danger">*</span></label>
+                        <input type="tel" name="sdt" id="inputSdt" class="form-control bg-dark border-secondary text-light" placeholder="09xxxxxxxx" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label text-light">Email <span class="text-danger">*</span></label>
+                        <input type="email" name="email" id="inputEmail" class="form-control bg-dark border-secondary text-light" placeholder="name@example.com" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label text-light">Số CCCD / CMND <span class="text-danger">*</span></label>
+                        <input type="text" name="cccd" id="inputCccd" class="form-control bg-dark border-secondary text-light" placeholder="12 chữ số" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label text-light">Ngày sinh</label>
+                        <input type="date" name="ngaySinh" id="inputNgaySinh" class="form-control bg-dark border-secondary text-light">
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label text-light">Mật khẩu đăng nhập <span class="text-danger">*</span></label>
+                        <input type="password" name="matKhau" id="inputMatKhau" class="form-control bg-dark border-secondary text-light" placeholder="Tối thiểu 6 ký tự" required>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label text-light">Địa chỉ liên hệ</label>
+                        <input type="text" name="diaChi" id="inputDiaChi" class="form-control bg-dark border-secondary text-light" placeholder="Số nhà, đường, quận/huyện, tỉnh/thành phố">
+                    </div>
+
+                    <div class="col-md-12 mt-4">
+                        <button type="submit" class="btn btn-cineman w-100 py-2">
+                            <i class="fa-solid fa-user-plus me-1"></i> Xác Nhận Đăng Ký Thành Viên
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="text-center mt-3">
+                <span class="text-secondary small">Đã có tài khoản?</span>
+                <a href="{{ url_for('login') }}" class="text-info small text-decoration-none">Đăng nhập</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function fillDemoCustomer() {
+    document.getElementById('inputHoTen').value = 'Nguyễn Tuấn Anh';
+    document.getElementById('inputSdt').value = '0988' + Math.floor(100000 + Math.random() * 900000);
+    document.getElementById('inputEmail').value = 'tuananh.ptit' + Math.floor(Math.random() * 1000) + '@gmail.com';
+    document.getElementById('inputCccd').value = '001202' + Math.floor(100000 + Math.random() * 900000);
+    document.getElementById('inputNgaySinh').value = '2002-04-15';
+    document.getElementById('inputMatKhau').value = '123456';
+    document.getElementById('inputDiaChi').value = 'Km10 Đường Nguyễn Trãi, Hà Đông, Hà Nội (PTIT)';
+}
+</script>
+{% endblock %}

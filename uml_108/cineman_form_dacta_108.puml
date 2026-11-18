@@ -1,0 +1,103 @@
+' ===== 01_usecase_tongquan_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam actorStyle awesome
+
+actor "Thành viên hệ thống" as TV
+actor "Nhân viên" as NV
+actor "Nhân viên quản lý" as NVQL
+actor "Nhân viên bán hàng" as NVBH
+actor "Khách hàng" as KH
+
+NV -up-|> TV
+NVQL -up-|> NV
+NVBH -up-|> NV
+KH -up-|> TV
+
+rectangle "Hệ thống quản lý rạp chiếu phim CineMan" {
+    usecase "Đăng nhập 108" as UC_Login
+    usecase "Đổi mật khẩu 108" as UC_Pass
+    usecase "Đăng xuất 108" as UC_Logout
+    usecase "Xem thống kê 108" as UC_ThongKe
+    usecase "Quản lý thông tin phim 108" as UC_QLPhim
+    usecase "Thêm thông tin phim 108" as UC_ThemPhim
+    usecase "Quản lý phòng chiếu 108" as UC_QLPhong
+    usecase "Quản lý lịch chiếu phim 108" as UC_QLLich
+    usecase "Tìm kiếm phim 108" as UC_TimPhim
+    usecase "Mua vé trực tuyến 108" as UC_MuaVeOnline
+    usecase "Bán vé tại quầy 108" as UC_BanVe
+    usecase "Xuất thẻ thành viên 108" as UC_XuatThe
+    usecase "Đăng ký thành viên 108" as UC_DangKy
+}
+
+TV --> UC_Login
+TV --> UC_Pass
+TV --> UC_Logout
+
+NVQL --> UC_ThongKe
+NVQL --> UC_QLPhim
+NVQL --> UC_QLPhong
+NVQL --> UC_QLLich
+
+NVBH --> UC_BanVe
+NVBH --> UC_XuatThe
+
+KH --> UC_TimPhim
+KH --> UC_MuaVeOnline
+KH --> UC_DangKy
+
+UC_ThemPhim .up.> UC_QLPhim : <<Extend>>
+@enduml
+
+' ===== 02_usecase_chitiet_dangky_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam actorStyle awesome
+
+actor "Khách hàng" as KH
+
+rectangle "Phân hệ Đăng ký thành viên" {
+    usecase "Đăng ký thành viên 108" as UC_DK
+    usecase "Nhập thông tin cá nhân 108" as UC_NhapTT
+    usecase "Lưu CSDL & Cấp thẻ 108" as UC_CapThe
+}
+
+KH --> UC_DK
+UC_DK ..> UC_NhapTT : <<Include>>
+UC_DK ..> UC_CapThe : <<Include>>
+@enduml
+
+' ===== 03_usecase_chitiet_banve_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam actorStyle awesome
+
+actor "Thành viên hệ thống" as TV
+actor "Nhân viên bán hàng" as NVBH
+actor "Khách hàng" as KH
+
+NVBH -up-|> TV
+
+rectangle "Phân hệ Bán vé tại quầy" {
+    usecase "Đăng nhập 108" as UC_Login
+    usecase "Bán vé tại quầy 108" as UC_BV
+    usecase "chọn phim 108" as UC_Phim
+    usecase "chọn giờ 108" as UC_Gio
+    usecase "chọn ghế 108" as UC_Ghe
+    usecase "nhập mã khách hàng 108" as UC_MaKH
+    usecase "thanh toán 108" as UC_TT
+}
+
+NVBH --> UC_BV
+KH --> UC_BV
+
+UC_BV ..> UC_Login : <<Include>>
+UC_BV ..> UC_Phim : <<Include>>
+UC_BV ..> UC_Gio : <<Include>>
+UC_BV ..> UC_Ghe : <<Include>>
+UC_BV ..> UC_TT : <<Include>>
+UC_MaKH .up.> UC_BV : <<Extend>>
+@enduml

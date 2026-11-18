@@ -1,0 +1,29 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+|#EBF5FB|GDDangKy108.jsp|
+|#FEF9E7|KhachHang108DAO|
+|#F2F4F4|CSDL SQLite|
+
+|GDDangKy108.jsp|
+start
+:Hiển thị form điền thông tin cá nhân;
+:Nhập họ tên, SĐT, email, CCCD, mật khẩu;
+:click Đăng ký;
+|KhachHang108DAO|
+:Đưa thông tin vào DAO;
+:Kiểm tra trùng lặp dữ liệu;
+if (Dữ liệu hợp lệ & Không trùng?) then (Có)
+    |CSDL SQLite|
+    :Lưu vào tblKhachHang108;
+    :Tự sinh mã thẻ, lưu vào tblTheThanhVien108;
+    |GDDangKy108.jsp|
+    :GDKetQuaDangKy108.jsp hiển thị thông báo thành công và mã thẻ;
+    stop
+else (Không)
+    |GDDangKy108.jsp|
+    :Hiển thị thông báo lỗi nhập liệu;
+    stop
+endif
+@enduml

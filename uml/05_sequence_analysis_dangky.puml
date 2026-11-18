@@ -1,0 +1,55 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+
+title BIỂU ĐỒ TRÌNH TỰ PHÂN TÍCH (ANALYSIS SEQUENCE DIAGRAM)\nCA SỬ DỤNG: ĐĂNG KÝ THÀNH VIÊN
+
+actor "Khách hàng" as KH
+boundary "FormDangKyThanhVien" as Form
+control "DangKyCtrl" as Ctrl
+entity "kh : KhachHang" as EntKH
+entity "the : TheThanhVien" as EntThe
+
+KH -> Form : chonDangKy()
+activate Form
+
+Form --> KH : hienThiFormDangKy()
+KH -> Form : nhapThongTin(hoTen, sdt, email, cccd, matKhau, ngaySinh)
+KH -> Form : clickDangKy()
+
+Form -> Ctrl : xuLyDangKy(thongTinKH)
+activate Ctrl
+
+Ctrl -> Ctrl : validateThongTin(thongTinKH)
+
+Ctrl -> EntKH : kiemTraTrungLap(sdt, email, cccd)
+activate EntKH
+EntKH --> Ctrl : ketQuaKiemTra(isDuplicate)
+deactivate EntKH
+
+alt [Thông tin bị trùng lặp]
+    Ctrl --> Form : thongBaoLoi("Số điện thoại/Email/CCCD đã tồn tại!")
+    Form --> KH : hienThiLoi()
+else [Thông tin hợp lệ & Chưa tồn tại]
+    Ctrl -> EntKH : taoMoiKhachHang(thongTinKH)
+    activate EntKH
+    EntKH --> Ctrl : khachHangMoi
+    deactivate EntKH
+
+    Ctrl -> EntThe : taoTheThanhVien(maThe, "Standard", diem=0)
+    activate EntThe
+    EntThe --> Ctrl : theMoi
+    deactivate EntThe
+
+    Ctrl -> EntKH : ganTheThanhVien(theMoi)
+
+    Ctrl --> Form : thongBaoThanhCong(khachHangMoi, theMoi)
+    deactivate Ctrl
+
+    Form --> KH : hienThiThongBaoThanhCong(maThe, hoTen)
+    deactivate Form
+end
+
+@enduml

@@ -1,0 +1,538 @@
+' ===== 08_database_schema_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam linetype ortho
+
+entity "tblThanhVien108" as tblThanhVien {
+    * id : int <<PK>>
+    --
+    username : varchar(255)
+    password : varchar(255)
+    ngaySinh : date
+    diaChi : varchar(255)
+    email : varchar(255)
+    sdt : varchar(255)
+    ghiChu : varchar(255)
+    tblHoTen108id : int <<FK>>
+}
+
+entity "tblHoTen108" as tblHoTen {
+    * id : int <<PK>>
+    --
+    ho : varchar(255)
+    tenDem : varchar(255)
+    ten : varchar(255)
+}
+
+entity "tblKhachHang108" as tblKhachHang {
+    * id : int <<PK>>
+    --
+    maSo : varchar(255)
+    tblThanhVien108id : int <<FK>>
+}
+
+entity "tblTheThanhVien108" as tblTheThanhVien {
+    * id : int <<PK>>
+    --
+    maThe : varchar(255)
+    ngayCap : date
+    ngayHetHan : date
+    diemTichLuy : int
+    tblKhachHang108id : int <<FK>>
+}
+
+entity "tblPhim108" as tblPhim {
+    * id : int <<PK>>
+    --
+    ten : varchar(255)
+    theLoai : varchar(255)
+    daoDien : varchar(255)
+    moTa : varchar(255)
+    thoiLuong : int
+}
+
+entity "tblPhongChieu108" as tblPhongChieu {
+    * id : int <<PK>>
+    --
+    maSo : varchar(255)
+    sucChua : int
+    tblRapChieu108id : int
+}
+
+entity "tblGhe108" as tblGhe {
+    * id : int <<PK>>
+    --
+    maGhe : varchar(255)
+    trangThai : int
+    tblPhongChieu108id : int <<FK>>
+}
+
+entity "tblSuatChieu108" as tblSuatChieu {
+    * id : int <<PK>>
+    --
+    batDau : time
+    ketThuc : time
+    ngayChieu : date
+    giaVe : float
+    tblPhim108id : int <<FK>>
+    tblPhongChieu108id : int <<FK>>
+}
+
+entity "tblHoaDon108" as tblHoaDon {
+    * id : int <<PK>>
+    --
+    maHD : varchar(255)
+    ngayTao : date
+    tongTien : float
+    giamGia : float
+    trangThai : int
+    tblKhachHang108id : int <<FK>>
+}
+
+entity "tblVe108" as tblVe {
+    * id : int <<PK>>
+    --
+    maVe : varchar(255)
+    giaBan : float
+    tblSuatChieu108id : int <<FK>>
+    tblGhe108id : int <<FK>>
+    tblHoaDon108id : int <<FK>>
+}
+
+tblThanhVien ||--|| tblHoTen
+tblKhachHang ||--|| tblThanhVien
+tblKhachHang ||--o| tblTheThanhVien
+tblPhongChieu ||--|{ tblGhe
+tblPhim ||--o{ tblSuatChieu
+tblPhongChieu ||--o{ tblSuatChieu
+tblSuatChieu ||--|{ tblVe
+tblGhe ||--|{ tblVe
+tblHoaDon ||--|{ tblVe
+tblKhachHang ||--o{ tblHoaDon
+@enduml
+
+' ===== 09_design_class_banve_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+package "view (JSP)" {
+    class GDChinhNVBH108_jsp {
+        -subBanVe
+    }
+    class GDChonPhim108_jsp {
+        -inoutChonPhim
+        -subTiepTuc
+    }
+    class GDChonSuatChieu108_jsp {
+        -outTenPhim
+        -inoutChonSuatChieu
+        -subTiepTuc
+    }
+    class GDChonGhe108_jsp {
+        -inoutDanhSachGhe
+        -subTiepTuc
+    }
+    class GDThanhToan108_jsp {
+        -outThongTinVe
+        -inPhuongThucThanhToan
+        -inNhapMathethanhvien
+        -subThanhToan
+    }
+}
+
+package "dao" {
+    class DAO {
+        -con: Connection
+        +DAO()
+    }
+    class Phim108DAO {
+        +getPhim(): List<Phim108>
+    }
+    class SuatChieu108DAO {
+        +getSuatChieuByPhim(idPhim: int): List<Suatchieu108>
+    }
+    class PhongChieu108DAO {
+        +getPhongChieuBySuatChieu(idSC: int): Phongchieu108
+    }
+    class Ghe108DAO {
+        +getGheByPhongChieu(idPC: int): List<Ghe108>
+    }
+    class HoaDon108DAO {
+        +luuHoaDon(hd: Hoadon108): int
+    }
+    class Ve108DAO {
+        +luuVe(ve: Ve108): boolean
+    }
+    class TheThanhVien108DAO {
+        +timThe(maThe: String): Thethanhvien108
+    }
+}
+
+package "model" {
+    class Phim108
+    class Suatchieu108
+    class Phongchieu108
+    class Ghe108
+    class Hoadon108
+    class Ve108
+    class Thethanhvien108
+}
+
+Phim108DAO --|> DAO
+SuatChieu108DAO --|> DAO
+PhongChieu108DAO --|> DAO
+Ghe108DAO --|> DAO
+HoaDon108DAO --|> DAO
+Ve108DAO --|> DAO
+TheThanhVien108DAO --|> DAO
+
+GDChonPhim108_jsp ..> Phim108DAO
+GDChonSuatChieu108_jsp ..> SuatChieu108DAO
+GDChonGhe108_jsp ..> PhongChieu108DAO
+GDChonGhe108_jsp ..> Ghe108DAO
+GDThanhToan108_jsp ..> HoaDon108DAO
+GDThanhToan108_jsp ..> Ve108DAO
+GDThanhToan108_jsp ..> TheThanhVien108DAO
+
+Phim108DAO ..> Phim108
+SuatChieu108DAO ..> Suatchieu108
+PhongChieu108DAO ..> Phongchieu108
+Ghe108DAO ..> Ghe108
+HoaDon108DAO ..> Hoadon108
+Ve108DAO ..> Ve108
+TheThanhVien108DAO ..> Thethanhvien108
+@enduml
+
+' ===== 10_activity_banve_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+|#EBF5FB|GDChinhNVBH108.jsp|
+|#E8F8F5|GDChonPhim108.jsp|
+|#FEF9E7|GDChonSuatChieu108.jsp|
+|#F4ECF7|GDChonGhe108.jsp|
+|#FDEDEC|GDThanhToan108.jsp|
+|#F2F4F4|DAO & CSDL|
+
+|GDChinhNVBH108.jsp|
+start
+:Nhận thông tin bán vé;
+:click Bán vé;
+
+|GDChonPhim108.jsp|
+:Lấy danh sách phim;
+|DAO & CSDL|
+:Phim108DAO.getPhim();
+|GDChonPhim108.jsp|
+:Hiển thị danh sách phim;
+:Lưu phim đã chọn vào session;
+:click tiếp tục;
+
+|GDChonSuatChieu108.jsp|
+:Lấy thông tin từ session;
+:Lấy danh sách suất chiếu;
+|DAO & CSDL|
+:SuatChieu108DAO.getSuatChieuByPhim();
+|GDChonSuatChieu108.jsp|
+:Hiển thị danh sách suất chiếu;
+:click chọn tiếp tục;
+
+|GDChonGhe108.jsp|
+:Lấy thông tin suất chiếu từ session;
+:Lấy danh sách ghế;
+|DAO & CSDL|
+:Ghe108DAO.getGheByPhongChieu();
+|GDChonGhe108.jsp|
+:Hiển thị sơ đồ ghế;
+:Chọn ghế, đưa vào session;
+:click tiếp tục;
+
+|GDThanhToan108.jsp|
+:Hiển thị thông tin vé;
+:Nhập mã thẻ thành viên (nếu có);
+:click thanh toán;
+|DAO & CSDL|
+:HoaDon108DAO.luuHoaDon();
+:Ve108DAO.luuVe();
+|GDThanhToan108.jsp|
+:Hiển thị thông báo thành công và in vé;
+stop
+@enduml
+
+' ===== 11_sequence_design_banve_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor "Khách/NV" as Actor
+boundary "GDChinh.jsp" as GD0
+boundary "GDChonPhim.jsp" as GD1
+participant "Phim108DAO" as PDAO
+boundary "GDChonSuatChieu.jsp" as GD2
+participant "SuatChieu108DAO" as SCDAO
+boundary "GDChonGhe.jsp" as GD3
+participant "PhongChieu108DAO" as PCDAO
+participant "Ghe108DAO" as GDAO
+boundary "GDThanhToan.jsp" as GD4
+participant "HoaDon108DAO" as HDDAO
+participant "Ve108DAO" as VDAO
+entity "Phim108" as E1
+entity "SuatChieu108" as E2
+entity "PhongChieu108" as E3
+entity "Ghe108" as E4
+
+Actor -> GD0 : 1: chọn mua vé
+activate GD0
+GD0 -> GD1 : 2: call
+activate GD1
+GD1 -> PDAO : 3: call getAllPhim()
+activate PDAO
+PDAO -> E1 : 4: gọi Phim108
+activate E1
+E1 --> PDAO : 5: return
+deactivate E1
+PDAO --> GD1 : 6: return List<Phim108>
+deactivate PDAO
+GD1 --> Actor : 7: hiển thị
+Actor -> GD1 : 8: chọn phim + click tiếp tục
+
+GD1 -> GD2 : 9: call
+activate GD2
+GD2 -> SCDAO : 10: call getSuatChieuByPhim()
+activate SCDAO
+SCDAO -> E2 : 11: gọi SuatChieu108
+activate E2
+E2 --> SCDAO : 12: return
+deactivate E2
+SCDAO --> GD2 : 13: return List<SuatChieu108>
+deactivate SCDAO
+GD2 --> Actor : 14: hiển thị
+Actor -> GD2 : 15: chọn suất + click tiếp tục
+
+GD2 -> GD3 : 16: call
+activate GD3
+GD3 -> PCDAO : 17: call getPhongChieuBySuatChieu()
+activate PCDAO
+PCDAO -> E3 : 18: gọi PhongChieu108
+activate E3
+E3 --> PCDAO : 19: return
+deactivate E3
+PCDAO --> GD3 : 20: return PhongChieu108
+deactivate PCDAO
+
+GD3 -> GDAO : 21: call getGheByPhongChieu()
+activate GDAO
+GDAO -> E4 : 22: gọi Ghe108
+activate E4
+E4 --> GDAO : 23: return
+deactivate E4
+GDAO --> GD3 : 24: return List<Ghe108>
+deactivate GDAO
+GD3 --> Actor : 25: hiển thị
+Actor -> GD3 : 26: chọn ghế + click tiếp tục
+
+GD3 -> GD4 : 27: call
+activate GD4
+GD4 --> Actor : 28: hiển thị hóa đơn
+Actor -> GD4 : 29: click thanh toán
+GD4 -> HDDAO : 30: call luuHoaDon()
+activate HDDAO
+HDDAO --> GD4 : 31: return idHoaDon
+deactivate HDDAO
+GD4 -> VDAO : 32: call luuVe()
+activate VDAO
+VDAO --> GD4 : 33: return success
+deactivate VDAO
+GD4 --> Actor : 34: hiển thị mua thành công
+deactivate GD4
+deactivate GD3
+deactivate GD2
+deactivate GD1
+deactivate GD0
+@enduml
+
+' ===== 17_design_class_dangky_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+package "view (JSP)" {
+    class GDChinh108_jsp {
+        -subDangKy
+    }
+    class GDDangKy108_jsp {
+        -inHoTen
+        -inSDT
+        -inEmail
+        -inCCCD
+        -inMatKhau
+        -subLuu
+    }
+    class GDKetQuaDangKy108_jsp {
+        -outThongBao
+        -subQuayLai
+    }
+}
+
+package "dao" {
+    class DAO {
+        -con: Connection
+    }
+    class KhachHang108DAO {
+        +themKhachHang(kh: Khachhang108): boolean
+        +kiemTraTrung(sdt: String, email: String): boolean
+    }
+    class TheThanhVien108DAO {
+        +themThe(the: Thethanhvien108): boolean
+    }
+}
+
+package "model" {
+    class Khachhang108
+    class Thethanhvien108
+}
+
+KhachHang108DAO --|> DAO
+TheThanhVien108DAO --|> DAO
+GDDangKy108_jsp ..> KhachHang108DAO
+GDDangKy108_jsp ..> TheThanhVien108DAO
+KhachHang108DAO ..> Khachhang108
+TheThanhVien108DAO ..> Thethanhvien108
+@enduml
+
+' ===== 18_activity_dangky_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+|#EBF5FB|GDDangKy108.jsp|
+|#FEF9E7|KhachHang108DAO|
+|#F2F4F4|CSDL SQLite|
+
+|GDDangKy108.jsp|
+start
+:Hiển thị form điền thông tin cá nhân;
+:Nhập họ tên, SĐT, email, CCCD, mật khẩu;
+:click Đăng ký;
+|KhachHang108DAO|
+:Đưa thông tin vào DAO;
+:Kiểm tra trùng lặp dữ liệu;
+if (Dữ liệu hợp lệ & Không trùng?) then (Có)
+    |CSDL SQLite|
+    :Lưu vào tblKhachHang108;
+    :Tự sinh mã thẻ, lưu vào tblTheThanhVien108;
+    |GDDangKy108.jsp|
+    :GDKetQuaDangKy108.jsp hiển thị thông báo thành công và mã thẻ;
+    stop
+else (Không)
+    |GDDangKy108.jsp|
+    :Hiển thị thông báo lỗi nhập liệu;
+    stop
+endif
+@enduml
+
+' ===== 19_sequence_design_dangky_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor "Khách hàng" as KH
+boundary "GDDangKy108.jsp" as View
+participant "KhachHang108DAO" as KHDAO
+participant "TheThanhVien108DAO" as TheDAO
+boundary "GDKetQuaDangKy108.jsp" as Result
+database "CSDL SQLite" as DB
+
+KH -> View : 1: nhập thông tin + click Lưu
+activate View
+View -> KHDAO : 2: call kiemTraTrung()
+activate KHDAO
+KHDAO -> DB : 3: executeQuery()
+activate DB
+DB --> KHDAO : 4: return kết quả
+deactivate DB
+KHDAO --> View : 5: hợp lệ
+deactivate KHDAO
+
+View -> KHDAO : 6: call themKhachHang(kh)
+activate KHDAO
+KHDAO -> DB : 7: executeUpdate()
+activate DB
+DB --> KHDAO : 8: idKhachHangMoi
+deactivate DB
+KHDAO --> View : 9: return true
+deactivate KHDAO
+
+View -> TheDAO : 10: call themThe(the)
+activate TheDAO
+TheDAO -> DB : 11: executeUpdate()
+activate DB
+DB --> TheDAO : 12: return 1
+deactivate DB
+TheDAO --> View : 13: return true
+deactivate TheDAO
+
+View -> Result : 14: chuyển tiếp kết quả
+activate Result
+Result --> KH : 15: hiển thị đăng ký thành công & mã thẻ
+deactivate Result
+deactivate View
+@enduml
+
+' ===== 12_package_diagram_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+package "webapp" {
+    package "modul_1" {
+    }
+    package "modul_2" {
+    }
+}
+
+package "dao" {
+}
+
+package "entity" {
+}
+
+package "util" {
+}
+
+webapp ..> dao : <<import>>
+modul_1 ..> dao : <<import>>
+modul_2 ..> dao : <<import>>
+
+dao ..> entity : <<import>>
+dao ..> util : <<import>>
+@enduml
+
+' ===== 13_deployment_diagram_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+node "<<device>>\nClient" as Client #EBF5FB {
+    artifact "Web browser\nHTML\nJavaScript"
+}
+
+node "Application Server" as AppServer #E8F8F5 {
+    artifact "Web server\nHTTP\nPython / Java"
+}
+
+database "Database Server" as DBServer #FEF9E7 {
+    artifact "DBMS\nSQLite / MySQL"
+}
+
+Client -- AppServer : HTTP
+AppServer -- DBServer : SQL Connection
+@enduml

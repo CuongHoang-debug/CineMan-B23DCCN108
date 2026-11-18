@@ -1,0 +1,69 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor "Nhân viên / Khách" as Actor
+boundary "GDChinhNVBH108" as GD0
+boundary "GDChonPhim108" as GD1
+entity "Phim108" as E1
+boundary "GDChonSuatChieu108" as GD2
+entity "Suatchieu108" as E2
+boundary "GDChonGhe108" as GD3
+entity "Ghe108" as E3
+boundary "GDThanhToan108" as GD4
+entity "Hoadon108" as E4
+
+Actor -> GD0 : 1: Click bán vé
+activate GD0
+GD0 -> GD1 : 2: Gọi
+activate GD1
+GD1 -> E1 : 3: Gọi
+activate E1
+E1 -> E1 : 4: getphim()
+E1 --> GD1 : 5: Trả về
+deactivate E1
+GD1 --> Actor : 6: Hiển thị
+Actor -> GD1 : 7: Click chọn
+
+GD1 -> GD2 : 8: Gọi
+activate GD2
+GD2 -> E2 : 9: Gọi
+activate E2
+E2 -> E2 : 10: getSuatChieu()
+E2 --> GD2 : 11: Trả về
+deactivate E2
+GD2 --> Actor : 12: Hiển thị
+Actor -> GD2 : 13: Click chọn
+
+GD2 -> GD3 : 14: Gọi
+activate GD3
+GD3 -> E3 : 15: Gọi
+activate E3
+E3 -> E3 : 16: getghetrong()
+E3 --> GD3 : 17: Trả về
+deactivate E3
+GD3 --> Actor : 18: Hiển thị
+Actor -> GD3 : 19: Click chọn
+
+GD3 -> GD4 : 20: Gọi
+activate GD4
+GD4 -> E4 : 21: Gọi
+activate E4
+E4 -> E4 : 22: getTTHoaDon()
+E4 --> GD4 : 23: Trả về
+deactivate E4
+GD4 --> Actor : 24: Hiển thị
+Actor -> GD4 : 25: Click thanh toán
+GD4 -> E4 : 26: Gọi
+activate E4
+E4 -> E4 : 27: ThanhToan(), luuHoaDon()
+E4 --> GD4 : 28: Trả về
+deactivate E4
+GD4 --> Actor : 29: Thông báo thành công
+deactivate GD4
+deactivate GD3
+deactivate GD2
+deactivate GD1
+deactivate GD0
+@enduml

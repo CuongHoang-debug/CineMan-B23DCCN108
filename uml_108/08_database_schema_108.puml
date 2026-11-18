@@ -1,0 +1,112 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam linetype ortho
+
+entity "tblThanhVien108" as tblThanhVien {
+    * id : int <<PK>>
+    --
+    username : varchar(255)
+    password : varchar(255)
+    ngaySinh : date
+    diaChi : varchar(255)
+    email : varchar(255)
+    sdt : varchar(255)
+    ghiChu : varchar(255)
+    tblHoTen108id : int <<FK>>
+}
+
+entity "tblHoTen108" as tblHoTen {
+    * id : int <<PK>>
+    --
+    ho : varchar(255)
+    tenDem : varchar(255)
+    ten : varchar(255)
+}
+
+entity "tblKhachHang108" as tblKhachHang {
+    * id : int <<PK>>
+    --
+    maSo : varchar(255)
+    tblThanhVien108id : int <<FK>>
+}
+
+entity "tblTheThanhVien108" as tblTheThanhVien {
+    * id : int <<PK>>
+    --
+    maThe : varchar(255)
+    ngayCap : date
+    ngayHetHan : date
+    diemTichLuy : int
+    tblKhachHang108id : int <<FK>>
+}
+
+entity "tblPhim108" as tblPhim {
+    * id : int <<PK>>
+    --
+    ten : varchar(255)
+    theLoai : varchar(255)
+    daoDien : varchar(255)
+    moTa : varchar(255)
+    thoiLuong : int
+}
+
+entity "tblPhongChieu108" as tblPhongChieu {
+    * id : int <<PK>>
+    --
+    maSo : varchar(255)
+    sucChua : int
+    tblRapChieu108id : int
+}
+
+entity "tblGhe108" as tblGhe {
+    * id : int <<PK>>
+    --
+    maGhe : varchar(255)
+    trangThai : int
+    tblPhongChieu108id : int <<FK>>
+}
+
+entity "tblSuatChieu108" as tblSuatChieu {
+    * id : int <<PK>>
+    --
+    batDau : time
+    ketThuc : time
+    ngayChieu : date
+    giaVe : float
+    tblPhim108id : int <<FK>>
+    tblPhongChieu108id : int <<FK>>
+}
+
+entity "tblHoaDon108" as tblHoaDon {
+    * id : int <<PK>>
+    --
+    maHD : varchar(255)
+    ngayTao : date
+    tongTien : float
+    giamGia : float
+    trangThai : int
+    tblKhachHang108id : int <<FK>>
+}
+
+entity "tblVe108" as tblVe {
+    * id : int <<PK>>
+    --
+    maVe : varchar(255)
+    giaBan : float
+    tblSuatChieu108id : int <<FK>>
+    tblGhe108id : int <<FK>>
+    tblHoaDon108id : int <<FK>>
+}
+
+tblThanhVien ||--|| tblHoTen
+tblKhachHang ||--|| tblThanhVien
+tblKhachHang ||--o| tblTheThanhVien
+tblPhongChieu ||--|{ tblGhe
+tblPhim ||--o{ tblSuatChieu
+tblPhongChieu ||--o{ tblSuatChieu
+tblSuatChieu ||--|{ tblVe
+tblGhe ||--|{ tblVe
+tblHoaDon ||--|{ tblVe
+tblKhachHang ||--o{ tblHoaDon
+@enduml

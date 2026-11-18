@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Đăng ký thành công - CineMan{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6 col-lg-5">
+        <div class="card card-custom p-4 text-center">
+            <div class="mb-3">
+                <i class="fa-solid fa-circle-check text-success fa-4x animate__animated animate__bounceIn"></i>
+            </div>
+            <h3 class="fw-bold text-success mb-2">Đăng Ký Thành Công!</h3>
+            <p class="text-secondary">Thông tin của bạn đã được ghi nhận vào cơ sở dữ liệu CineMan.</p>
+
+            <!-- Giao diện thẻ thành viên điện tử sang trọng -->
+            <div class="p-3 my-3 text-start rounded-3" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="fw-bold"><i class="fa-solid fa-film me-1"></i> CINEMAN MEMBERSHIP</span>
+                    <span class="badge bg-warning text-dark">{{ data.hang_the }}</span>
+                </div>
+                <div class="mb-3">
+                    <small class="text-light opacity-75 d-block">MÃ THẺ THÀNH VIÊN</small>
+                    <h2 class="fw-bold tracking-wide mb-0">{{ data.ma_the }}</h2>
+                </div>
+                <div class="d-flex justify-content-between align-items-end">
+                    <div>
+                        <small class="text-light opacity-75 d-block">CHỦ THẺ</small>
+                        <span class="fw-bold">{{ data.ho_ten }}</span>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-light opacity-75 d-block">ĐIỂM BAN ĐẦU</small>
+                        <span class="fw-bold text-warning">{{ data.diem }} PTS</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-dark border-secondary text-start small mb-3">
+                <i class="fa-solid fa-circle-info text-info me-1"></i>
+                Vui lòng lưu lại <strong>Mã thẻ: {{ data.ma_the }}</strong> để xuất trình khi mua vé tại quầy nhằm tích điểm và nhận ưu đãi giảm giá!
+            </div>
+
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('login') }}" class="btn btn-cineman flex-fill">
+                    <i class="fa-solid fa-arrow-right-to-bracket me-1"></i> Đăng nhập ngay
+                </a>
+                <a href="{{ url_for('customer_home') }}" class="btn btn-outline-secondary flex-fill text-light">
+                    Trang chủ
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

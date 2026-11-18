@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Trang Chủ Khách Hàng - CineMan{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+    <!-- CỘT 1: THẺ THÀNH VIÊN CỦA BẠN -->
+    <div class="col-md-5 col-lg-4">
+        <div class="card card-custom p-4">
+            <h5 class="fw-bold mb-3 text-warning">
+                <i class="fa-solid fa-id-card-clip me-2"></i>Thẻ Thành Viên Của Bạn
+            </h5>
+
+            {% if the_info and the_info.maThe %}
+            <div class="p-3 text-start rounded-3" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="small fw-bold"><i class="fa-solid fa-film me-1"></i> CINEMAN MEMBER</span>
+                    <span class="badge bg-warning text-dark">{{ the_info.hangThe }}</span>
+                </div>
+                <div class="mb-3">
+                    <small class="text-light opacity-75 d-block">MÃ THẺ THÀNH VIÊN</small>
+                    <h3 class="fw-bold tracking-wide mb-0">{{ the_info.maThe }}</h3>
+                </div>
+                <div class="d-flex justify-content-between align-items-end">
+                    <div>
+                        <small class="text-light opacity-75 d-block">CHỦ THẺ</small>
+                        <span class="fw-bold">{{ the_info.hoTen }}</span>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-light opacity-75 d-block">ĐIỂM TÍCH LŨY</small>
+                        <span class="fw-bold text-warning">{{ the_info.diemTichLuy }} PTS</span>
+                    </div>
+                </div>
+            </div>
+            <div class="alert alert-dark border-secondary small mt-3 mb-0">
+                <i class="fa-solid fa-circle-check text-success me-1"></i>
+                Khi mua vé tại quầy, hãy đọc mã <strong>{{ the_info.maThe }}</strong> cho nhân viên để được giảm giá tự động!
+            </div>
+            {% else %}
+            <div class="text-center py-4">
+                <i class="fa-solid fa-id-card text-secondary fa-3x mb-2"></i>
+                <p class="text-secondary small">Bạn chưa đăng ký thẻ thành viên thân thiết.</p>
+                <a href="{{ url_for('register') }}" class="btn btn-cineman btn-sm">Đăng ký thẻ ngay</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- CỘT 2: DANH SÁCH PHIM ĐANG CHIẾU TẠI RẠP -->
+    <div class="col-md-7 col-lg-8">
+        <div class="card card-custom p-3">
+            <h5 class="fw-bold mb-3 text-danger">
+                <i class="fa-solid fa-fire me-2"></i>Phim Đang Chiếu Tại Rạp CineMan
+            </h5>
+            <div class="row row-cols-1 row-cols-md-3 g-3">
+                {% for m in movies %}
+                <div class="col">
+                    <div class="card bg-dark border-secondary h-100">
+                        <img src="{{ m.poster }}" class="card-img-top" style="height: 180px; object-fit: cover;" alt="">
+                        <div class="card-body p-2 d-flex flex-column">
+                            <div class="mb-1">
+                                <span class="badge bg-danger">{{ m.doTuoi }}</span>
+                                <span class="badge bg-secondary">{{ m.thoiLuong }}p</span>
+                            </div>
+                            <h6 class="card-title text-light fw-bold mb-1 text-truncate">{{ m.tenPhim }}</h6>
+                            <p class="text-secondary small mb-2 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                {{ m.moTa }}
+                            </p>
+                            <span class="badge bg-dark border border-secondary text-warning small py-1">Đang chiếu tại rạp</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

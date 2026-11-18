@@ -1,0 +1,303 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+title BIỂU ĐỒ LỚP THIẾT KẾ CHI TIẾT (DESIGN CLASS DIAGRAM) - HỆ THỐNG CINEMAN
+
+package "model" {
+    abstract class NguoiDung {
+        - id: int
+        - taiKhoan: String
+        - matKhau: String
+        - hoTen: String
+        - sdt: String
+        - email: String
+        - vaiTro: String
+        + NguoiDung()
+        + getId(): int
+        + getTaiKhoan(): String
+        + getHoTen(): String
+        + getSdt(): String
+        + getEmail(): String
+        + getVaiTro(): String
+    }
+
+    class NhanVien {
+        - chucVu: String
+        - caLamViec: String
+        - luongCoBan: float
+        + NhanVien()
+        + getChucVu(): String
+        + getCaLamViec(): String
+    }
+
+    class KhachHang {
+        - cccd: String
+        - ngaySinh: String
+        - diaChi: String
+        - theThanhVien: TheThanhVien
+        + KhachHang()
+        + getCccd(): String
+        + getTheThanhVien(): TheThanhVien
+        + setTheThanhVien(the: TheThanhVien): void
+    }
+
+    class TheThanhVien {
+        - id: int
+        - maThe: String
+        - hangThe: String
+        - diemTichLuy: int
+        - ngayCap: String
+        - trangThai: String
+        + TheThanhVien()
+        + getMaThe(): String
+        + getHangThe(): String
+        + getDiemTichLuy(): int
+        + congDiem(diem: int): void
+        + truDiem(diem: int): void
+    }
+
+    class Phim {
+        - id: int
+        - tenPhim: String
+        - theLoai: String
+        - thoiLuong: int
+        - daoDien: String
+        - doTuoi: String
+        - poster: String
+        - moTa: String
+        - trangThai: String
+        + Phim()
+        + getId(): int
+        + getTenPhim(): String
+        + getThoiLuong(): int
+        + getTrangThai(): String
+    }
+
+    class PhongChieu {
+        - id: int
+        - tenPhong: String
+        - loaiPhong: String
+        - tongSoGhe: int
+        - danhSachGhe: List<Ghe>
+        + PhongChieu()
+        + getId(): int
+        + getTenPhong(): String
+        + getDanhSachGhe(): List<Ghe>
+    }
+
+    class Ghe {
+        - id: int
+        - maGhe: String
+        - soHang: String
+        - soCot: int
+        - loaiGhe: String
+        - phuThu: float
+        + Ghe()
+        + getId(): int
+        + getMaGhe(): String
+        + getLoaiGhe(): String
+        + getPhuThu(): float
+    }
+
+    class LichChieu {
+        - id: int
+        - phim: Phim
+        - phongChieu: PhongChieu
+        - ngayChieu: String
+        - gioBatDau: String
+        - gioKetThuc: String
+        - giaVeGoc: float
+        + LichChieu()
+        + getId(): int
+        + getPhim(): Phim
+        + getPhongChieu(): PhongChieu
+        + getGiaVeGoc(): float
+    }
+
+    class Ve {
+        - id: int
+        - maVe: String
+        - lichChieu: LichChieu
+        - ghe: Ghe
+        - giaBan: float
+        - trangThai: String
+        + Ve()
+        + getId(): int
+        + getGhe(): Ghe
+        + getGiaBan(): float
+    }
+
+    class HoaDon {
+        - id: int
+        - maHD: String
+        - ngayLap: String
+        - nhanVien: NhanVien
+        - khachHang: KhachHang
+        - tongTien: float
+        - giamGia: float
+        - thanhTien: float
+        - phuongThucTT: String
+        - danhSachVe: List<Ve>
+        + HoaDon()
+        + themVe(ve: Ve): void
+        + getThanhTien(): float
+    }
+}
+
+package "dao" {
+    class DBConnection {
+        - {static} instance: DBConnection
+        - connection: Connection
+        - DBConnection()
+        + {static} getInstance(): DBConnection
+        + getConnection(): Connection
+    }
+
+    class KhachHangDAO {
+        + themKhachHang(kh: KhachHang): boolean
+        + kiemTraTrung(sdt: String, email: String, cccd: String): boolean
+        + timTheoMaThe(maThe: String): KhachHang
+        + layTatCaKhachHang(): List<KhachHang>
+    }
+
+    class TheThanhVienDAO {
+        + themThe(the: TheThanhVien, idKH: int): boolean
+        + timTheoMa(maThe: String): TheThanhVien
+        + capNhatDiem(maThe: String, diemMoi: int): boolean
+    }
+
+    class PhimDAO {
+        + timPhim(tuKhoa: String): List<Phim>
+        + layTatCaPhim(): List<Phim>
+        + themPhim(p: Phim): boolean
+        + suaPhim(p: Phim): boolean
+        + xoaPhim(idPhim: int): boolean
+    }
+
+    class LichChieuDAO {
+        + layLichTheoPhim(idPhim: int): List<LichChieu>
+        + layChiTietLich(idLich: int): LichChieu
+        + themLichChieu(lc: LichChieu): boolean
+    }
+
+    class GheDAO {
+        + layGheTheoPhong(idPhong: int): List<Ghe>
+        + layTrangThaiGhe(idLich: int): Map<Integer, String>
+    }
+
+    class HoaDonDAO {
+        + taoHoaDon(hd: HoaDon): int
+        + layHoaDonTheoId(idHD: int): HoaDon
+    }
+
+    class VeDAO {
+        + taoVe(ve: Ve, idHD: int): boolean
+        + layVeTheoHoaDon(idHD: int): List<Ve>
+    }
+
+    class ThongKeDAO {
+        + thongKeDoanhThu(tuNgay: String, denNgay: String): Map<String, Object>
+        + thongKePhim(tuNgay: String, denNgay: String): List<Map<String, Object>>
+        + thongKeKhachHang(): List<Map<String, Object>>
+    }
+}
+
+package "controller" {
+    class KhachHangController {
+        - khDAO: KhachHangDAO
+        - theDAO: TheThanhVienDAO
+        + dangKyThanhVien(kh: KhachHang): Map<String, Object>
+        + kiemTraThe(maThe: String): TheThanhVien
+    }
+
+    class BanVeController {
+        - phimDAO: PhimDAO
+        - lichDAO: LichChieuDAO
+        - gheDAO: GheDAO
+        - theDAO: TheThanhVienDAO
+        - hoaDonDAO: HoaDonDAO
+        - veDAO: VeDAO
+        + timKiemPhim(tuKhoa: String): List<Phim>
+        + chonPhim(idPhim: int): List<LichChieu>
+        + chonSuatChieu(idLich: int): Map<String, Object>
+        + tinhTien(idLich: int, dsIdGhe: List<Integer>, maThe: String): Map<String, Object>
+        + xacNhanThanhToan(idLich: int, dsIdGhe: List<Integer>, maThe: String, pttt: String, idNV: int): HoaDon
+    }
+
+    class ThongKeController {
+        - tkDAO: ThongKeDAO
+        + xemDoanhThu(tuNgay: String, denNgay: String): Map<String, Object>
+        + xemThongKePhim(tuNgay: String, denNgay: String): List<Map<String, Object>>
+        + xemThongKeKhachHang(): List<Map<String, Object>>
+    }
+}
+
+package "view" {
+    class DangKyThanhVienFrm {
+        - ctrlKH: KhachHangController
+        + btnDangKy_Click(): void
+        + hienThiThanhCong(): void
+    }
+
+    class BanVeFrm {
+        - ctrlBanVe: BanVeController
+        + btnTimPhim_Click(): void
+        + onPhimSelected(): void
+        + onSuatChieuSelected(): void
+        + onGheSelected(): void
+        + btnApDungThe_Click(): void
+        + btnThanhToan_Click(): void
+        + inVeVaHoaDon(hd: HoaDon): void
+    }
+
+    class ThongKeFrm {
+        - ctrlTK: ThongKeController
+        + btnXemThongKe_Click(): void
+        + hienThiBaoCao(): void
+    }
+}
+
+' Thua ke
+NguoiDung <|-- NhanVien
+NguoiDung <|-- KhachHang
+
+' Quan he Model
+KhachHang "1" *-- "1" TheThanhVien
+PhongChieu "1" *-- "1..*" Ghe
+Phim "1" -- "0..*" LichChieu
+PhongChieu "1" -- "0..*" LichChieu
+LichChieu "1" -- "0..*" Ve
+Ghe "1" -- "0..*" Ve
+HoaDon "1" *-- "1..*" Ve
+NhanVien "1" -- "0..*" HoaDon
+KhachHang "0..1" -- "0..*" HoaDon
+
+' Quan he giua cac tang
+BanVeFrm ..> BanVeController
+DangKyThanhVienFrm ..> KhachHangController
+ThongKeFrm ..> ThongKeController
+
+BanVeController ..> PhimDAO
+BanVeController ..> LichChieuDAO
+BanVeController ..> GheDAO
+BanVeController ..> TheThanhVienDAO
+BanVeController ..> HoaDonDAO
+BanVeController ..> VeDAO
+
+KhachHangController ..> KhachHangDAO
+KhachHangController ..> TheThanhVienDAO
+
+ThongKeController ..> ThongKeDAO
+
+KhachHangDAO ..> DBConnection
+PhimDAO ..> DBConnection
+LichChieuDAO ..> DBConnection
+GheDAO ..> DBConnection
+HoaDonDAO ..> DBConnection
+VeDAO ..> DBConnection
+ThongKeDAO ..> DBConnection
+
+@enduml

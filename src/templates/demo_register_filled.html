@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Đăng ký thành viên - CineMan (Demo){% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-3">
+    <div class="col-md-7 col-lg-6">
+        <div class="card card-custom p-4">
+            <div class="text-center mb-3">
+                <i class="fa-solid fa-id-card text-warning fa-3x mb-2"></i>
+                <h3 class="fw-bold">Đăng Ký Thẻ Thành Viên CineMan</h3>
+                <p class="text-secondary small mb-2">Tích điểm đổi vé, nhận ưu đãi độc quyền lên tới 15%</p>
+                <div class="alert alert-dark border-secondary p-2 text-start small mb-0">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <strong class="text-warning"><i class="fa-solid fa-list-check me-1"></i> Luồng nghiệp vụ đăng ký thành viên:</strong>
+                        <span class="badge bg-info text-dark">Bước 2: Nhập thông tin</span>
+                    </div>
+                    <div class="text-muted" style="font-size: 0.8rem;">
+                        1. Chọn Đăng ký → <strong>2. Nhập thông tin cá nhân</strong> → 3. Click Đăng ký → 4. Lưu CSDL & Cấp mã thẻ
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST" action="{{ url_for('register') }}" id="registerForm">
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label class="form-label text-light">Họ và tên <span class="text-danger">*</span></label>
+                        <input type="text" name="hoTen" class="form-control bg-dark border-secondary text-light" value="Nguyễn Tuấn Anh" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label text-light">Số điện thoại <span class="text-danger">*</span></label>
+                        <input type="tel" name="sdt" class="form-control bg-dark border-secondary text-light" value="0988123456" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label text-light">Email <span class="text-danger">*</span></label>
+                        <input type="email" name="email" class="form-control bg-dark border-secondary text-light" value="tuananh.ptit@gmail.com" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label text-light">Số CCCD / CMND <span class="text-danger">*</span></label>
+                        <input type="text" name="cccd" class="form-control bg-dark border-secondary text-light" value="001202019988" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label text-light">Ngày sinh</label>
+                        <input type="date" name="ngaySinh" class="form-control bg-dark border-secondary text-light" value="2002-04-15">
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label text-light">Mật khẩu đăng nhập <span class="text-danger">*</span></label>
+                        <input type="password" name="matKhau" class="form-control bg-dark border-secondary text-light" value="123456" required>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label text-light">Địa chỉ liên hệ</label>
+                        <input type="text" name="diaChi" class="form-control bg-dark border-secondary text-light" value="Km10 Đường Nguyễn Trãi, Hà Đông, Hà Nội (Học viện CNBCVT)">
+                    </div>
+
+                    <div class="col-md-12 mt-4">
+                        <button type="submit" class="btn btn-cineman w-100 py-2">
+                            <i class="fa-solid fa-user-plus me-1"></i> Xác Nhận Đăng Ký Thành Viên
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

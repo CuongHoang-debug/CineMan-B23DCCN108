@@ -1,0 +1,440 @@
+' ===== 04_entity_class_diagram_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class Hoten108 {
+    -ho: String
+    -tendem: String
+    -ten: String
+}
+
+class Thanhvien108 {
+    -id: int
+    -username: String
+    -password: String
+    -name: String
+    -ngaysinh: date
+    -diachi: String
+    -email: String
+    -sdt: String
+    -ghichu: String
+}
+
+class Nhanvien108 {
+    -chucVu: String
+}
+
+class NVQuanLy108 {
+}
+
+class NVBanHang108 {
+}
+
+class Khachhang108 {
+}
+
+class Thethanhvien108 {
+    -id: int
+    -maso: String
+    -ngaycap: date
+    -ngayhethan: date
+}
+
+class Rapchieuphim108 {
+    -id: int
+    -tenrap: String
+    -sophongchieu: int
+}
+
+class Phongchieu108 {
+    -id: int
+    -maso: String
+    -succhua: int
+}
+
+class Ghe108 {
+    -id: int
+    -maghe: String
+    -trangthai: boolean
+}
+
+class Phim108 {
+    -id: int
+    -tenphim: String
+    -theloai: String
+    -daodien: String
+    -mota: String
+    -thoiluong: int
+}
+
+class Suatchieu108 {
+    -id: int
+    -tgbatdau: dateTime
+    -tgketthuc: dateTime
+    -ngaychieu: date
+    -giochieu: dateTime
+}
+
+class Hoadon108 {
+    -id: int
+    -mahoadon: String
+    -ngay: date
+    -tongtien: Float
+    -trangthai: boolean
+}
+
+class Ve108 {
+    -id: int
+    -mave: String
+}
+
+class TKDoanhthu108 {
+    -tongdoanhthu: float
+}
+
+class TKKhachhang108 {
+    -tongsokhachhang: int
+}
+
+Thanhvien108 *-- Hoten108
+Nhanvien108 --|> Thanhvien108
+Khachhang108 --|> Thanhvien108
+NVQuanLy108 --|> Nhanvien108
+NVBanHang108 --|> Nhanvien108
+
+Khachhang108 "1" -- "0..1" Thethanhvien108
+Rapchieuphim108 "1" *-- "1..*" Phongchieu108
+Phongchieu108 "1" *-- "1..*" Ghe108
+Phim108 "1" -- "0..*" Suatchieu108
+Phongchieu108 "1" -- "0..*" Suatchieu108
+
+Suatchieu108 "1" -- "0..*" Ve108
+Ghe108 "1" -- "0..*" Ve108
+Hoadon108 "1" *-- "1..*" Ve108
+
+Hoadon108 --|> TKDoanhthu108
+Khachhang108 --|> TKKhachhang108
+
+NVBanHang108 "1" -- "0..*" Hoadon108
+Khachhang108 "1" -- "0..*" Hoadon108
+@enduml
+
+' ===== 05_analysis_class_banve_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class GDChinhNVBH108 <<boundary>> {
+    -subBanVe: submit
+}
+
+class GDChonPhim108 <<boundary>> {
+    -moutChonPhim: in/out
+    -moutChonSuatChieu: in/out
+    -subTiepTuc: submit
+}
+
+class GDChonSuatChieu108 <<boundary>> {
+    -outTenPhim: output
+    -moutChonSuatChieu: in/out
+    -subTiepTuc: submit
+}
+
+class GDChonGhe108 <<boundary>> {
+    -moutDanhSachGhe: in/out
+    -subTiepTuc: submit
+}
+
+class GDThanhToan108 <<boundary>> {
+    -outThongTinVe: output
+    -inPhuongThucThanhToan: input
+    -inNhapMathethanhvien: input
+    -subThanhToan: submit
+}
+
+class Phim108 <<entity>> {
+    -tenphim: String
+    -theloai: String
+    -daodien: String
+    -thoiluong: int
+    -mota: String
+    +getphim()
+}
+
+class Suatchieu108 <<entity>> {
+    -tgbatdau: dateTime
+    -tgketthuc: dateTime
+    -ngaychieu: date
+    -giochieu: dateTime
+    +getsuatchieu()
+}
+
+class Ghe108 <<entity>> {
+    -maghe: String
+    -trangthai: boolean
+    +getghetrong()
+}
+
+class Hoadon108 <<entity>> {
+    -mahoadon: String
+    -ngay: date
+    -tongtien: float
+    -trangthai: boolean
+    +getTTHoaDon()
+    +ThanhToan()
+    +luuHoaDon()
+}
+
+class Ve108 <<entity>> {
+    -mave: String
+}
+
+class Thethanhvien108 <<entity>> {
+    -mathe: String
+    -cappdo: String
+    -diem: int
+}
+
+class Khachhang108 <<entity>> {
+}
+
+GDChinhNVBH108 ..> GDChonPhim108
+GDChonPhim108 ..> GDChonSuatChieu108
+GDChonSuatChieu108 ..> GDChonGhe108
+GDChonGhe108 ..> GDThanhToan108
+
+GDChonPhim108 ..> Phim108 : getphim()
+GDChonSuatChieu108 ..> Suatchieu108 : getsuatchieu()
+GDChonGhe108 ..> Ghe108 : getghetrong()
+GDThanhToan108 ..> Hoadon108 : ThanhToan()
+
+Phim108 "1" -- "0..*" Suatchieu108
+Suatchieu108 "1" -- "0..*" Ve108
+Ghe108 "1" -- "0..*" Ve108
+Hoadon108 "1" *-- "1..*" Ve108
+Khachhang108 "1" -- "0..1" Thethanhvien108
+Thethanhvien108 ..> GDThanhToan108
+@enduml
+
+' ===== 06_communication_banve_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+actor "Nhân viên / Khách hàng" as Actor
+boundary "GDChinhNVBH108" as GDChinh
+boundary "GDChonPhim108" as GDPhim
+boundary "GDChonSuatChieu108" as GDLich
+boundary "GDChonGhe108" as GDGhe
+boundary "GDThanhToan108" as GDTT
+
+entity "Phim108" as EPhim
+entity "Suatchieu108" as ELich
+entity "Ghe108" as EGhe
+entity "Hoadon108" as EHD
+
+Actor -> GDChinh : 1: Click bán vé
+GDChinh -> GDPhim : 2: Gọi
+GDPhim -> EPhim : 3: Gọi getphim()
+EPhim -> GDPhim : 4: Trả về DS phim
+GDPhim -> Actor : 5: Hiển thị
+Actor -> GDPhim : 6: Click chọn phim
+
+GDPhim -> GDLich : 7: Gọi
+GDLich -> ELich : 8: Gọi getSuatChieu()
+ELich -> GDLich : 9: Trả về DS suất chiếu
+GDLich -> Actor : 10: Hiển thị
+Actor -> GDLich : 11: Click chọn suất chiếu
+
+GDLich -> GDGhe : 12: Gọi
+GDGhe -> EGhe : 13: Gọi getghetrong()
+EGhe -> GDGhe : 14: Trả về sơ đồ ghế
+GDGhe -> Actor : 15: Hiển thị
+Actor -> GDGhe : 16: Click chọn ghế
+
+GDGhe -> GDTT : 17: Gọi
+GDTT -> EHD : 18: Gọi getTTHoaDon()
+EHD -> GDTT : 19: Trả về thông tin
+GDTT -> Actor : 20: Hiển thị
+Actor -> GDTT : 21: Nhập thẻ & Click thanh toán
+GDTT -> EHD : 22: ThanhToan(), luuHoaDon()
+EHD -> GDTT : 23: Trả về kết quả
+GDTT -> Actor : 24: Thông báo thành công & in vé
+@enduml
+
+' ===== 07_sequence_analysis_banve_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor "Nhân viên / Khách" as Actor
+boundary "GDChinhNVBH108" as GD0
+boundary "GDChonPhim108" as GD1
+entity "Phim108" as E1
+boundary "GDChonSuatChieu108" as GD2
+entity "Suatchieu108" as E2
+boundary "GDChonGhe108" as GD3
+entity "Ghe108" as E3
+boundary "GDThanhToan108" as GD4
+entity "Hoadon108" as E4
+
+Actor -> GD0 : 1: Click bán vé
+activate GD0
+GD0 -> GD1 : 2: Gọi
+activate GD1
+GD1 -> E1 : 3: Gọi
+activate E1
+E1 -> E1 : 4: getphim()
+E1 --> GD1 : 5: Trả về
+deactivate E1
+GD1 --> Actor : 6: Hiển thị
+Actor -> GD1 : 7: Click chọn
+
+GD1 -> GD2 : 8: Gọi
+activate GD2
+GD2 -> E2 : 9: Gọi
+activate E2
+E2 -> E2 : 10: getSuatChieu()
+E2 --> GD2 : 11: Trả về
+deactivate E2
+GD2 --> Actor : 12: Hiển thị
+Actor -> GD2 : 13: Click chọn
+
+GD2 -> GD3 : 14: Gọi
+activate GD3
+GD3 -> E3 : 15: Gọi
+activate E3
+E3 -> E3 : 16: getghetrong()
+E3 --> GD3 : 17: Trả về
+deactivate E3
+GD3 --> Actor : 18: Hiển thị
+Actor -> GD3 : 19: Click chọn
+
+GD3 -> GD4 : 20: Gọi
+activate GD4
+GD4 -> E4 : 21: Gọi
+activate E4
+E4 -> E4 : 22: getTTHoaDon()
+E4 --> GD4 : 23: Trả về
+deactivate E4
+GD4 --> Actor : 24: Hiển thị
+Actor -> GD4 : 25: Click thanh toán
+GD4 -> E4 : 26: Gọi
+activate E4
+E4 -> E4 : 27: ThanhToan(), luuHoaDon()
+E4 --> GD4 : 28: Trả về
+deactivate E4
+GD4 --> Actor : 29: Thông báo thành công
+deactivate GD4
+deactivate GD3
+deactivate GD2
+deactivate GD1
+deactivate GD0
+@enduml
+
+' ===== 14_analysis_class_dangky_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class GDChinh108 <<boundary>> {
+    -subDangKyThanhVien: submit
+}
+
+class GDDangKy108 <<boundary>> {
+    -inHoTen: input
+    -inSDT: input
+    -inEmail: input
+    -inCCCD: input
+    -inMatKhau: input
+    -subLuu: submit
+}
+
+class GDKetQuaDangKy108 <<boundary>> {
+    -textThongBao: output
+    -subQuayLai: submit
+}
+
+class Khachhang108 <<entity>> {
+    -maKH: String
+    -cccd: String
+    -diachi: String
+    +themKhachHangMoi()
+}
+
+class Thethanhvien108 <<entity>> {
+    -maThe: String
+    -diem: int
+    +taoTheThanhVien()
+}
+
+GDChinh108 ..> GDDangKy108
+GDDangKy108 ..> GDKetQuaDangKy108
+GDDangKy108 ..> Khachhang108 : themKhachHangMoi()
+GDDangKy108 ..> Thethanhvien108 : taoTheThanhVien()
+Khachhang108 "1" *-- "1" Thethanhvien108
+@enduml
+
+' ===== 15_communication_dangky_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+actor "Khách hàng" as KH
+boundary "GDChinh108" as GDChinh
+boundary "GDDangKy108" as GDDangKy
+boundary "GDKetQuaDangKy108" as GDKetQua
+entity "Khachhang108" as EKH
+entity "Thethanhvien108" as EThe
+
+KH -> GDChinh : 1: Chọn đăng ký
+GDChinh -> GDDangKy : 2: Gọi
+GDDangKy -> KH : 3: Hiển thị form
+KH -> GDDangKy : 4: Nhập thông tin + Click đăng ký
+GDDangKy -> EKH : 5: Gọi themKhachHangMoi()
+EKH -> EThe : 6: taoTheThanhVien()
+EThe -> EKH : 7: Trả về
+EKH -> GDDangKy : 8: Trả về kết quả
+GDDangKy -> GDKetQua : 9: Gọi
+GDKetQua -> KH : 10: Thông báo thành công & Mã thẻ
+@enduml
+
+' ===== 16_sequence_analysis_dangky_108.puml =====
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor "Khách hàng" as KH
+boundary "GDChinh108" as GD0
+boundary "GDDangKy108" as GD1
+boundary "GDKetQuaDangKy108" as GD2
+entity "Khachhang108" as EKH
+entity "Thethanhvien108" as EThe
+
+KH -> GD0 : 1: Chọn đăng ký
+activate GD0
+GD0 -> GD1 : 2: Gọi
+activate GD1
+GD1 --> KH : 3: Hiển thị form
+KH -> GD1 : 4: Nhập thông tin + click đăng ký
+GD1 -> EKH : 5: themKhachHangMoi()
+activate EKH
+EKH -> EThe : 6: taoTheThanhVien()
+activate EThe
+EThe --> EKH : 7: return theThanhVien
+deactivate EThe
+EKH --> GD1 : 8: return ketQua
+deactivate EKH
+GD1 -> GD2 : 9: Gọi
+activate GD2
+GD2 --> KH : 10: Thông báo thành công & Mã thẻ
+deactivate GD2
+deactivate GD1
+deactivate GD0
+@enduml

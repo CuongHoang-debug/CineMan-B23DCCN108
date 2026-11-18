@@ -1,0 +1,121 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class Hoten108 {
+    -ho: String
+    -tendem: String
+    -ten: String
+}
+
+class Thanhvien108 {
+    -id: int
+    -username: String
+    -password: String
+    -name: String
+    -ngaysinh: date
+    -diachi: String
+    -email: String
+    -sdt: String
+    -ghichu: String
+}
+
+class Nhanvien108 {
+    -chucVu: String
+}
+
+class NVQuanLy108 {
+}
+
+class NVBanHang108 {
+}
+
+class Khachhang108 {
+}
+
+class Thethanhvien108 {
+    -id: int
+    -maso: String
+    -ngaycap: date
+    -ngayhethan: date
+}
+
+class Rapchieuphim108 {
+    -id: int
+    -tenrap: String
+    -sophongchieu: int
+}
+
+class Phongchieu108 {
+    -id: int
+    -maso: String
+    -succhua: int
+}
+
+class Ghe108 {
+    -id: int
+    -maghe: String
+    -trangthai: boolean
+}
+
+class Phim108 {
+    -id: int
+    -tenphim: String
+    -theloai: String
+    -daodien: String
+    -mota: String
+    -thoiluong: int
+}
+
+class Suatchieu108 {
+    -id: int
+    -tgbatdau: dateTime
+    -tgketthuc: dateTime
+    -ngaychieu: date
+    -giochieu: dateTime
+}
+
+class Hoadon108 {
+    -id: int
+    -mahoadon: String
+    -ngay: date
+    -tongtien: Float
+    -trangthai: boolean
+}
+
+class Ve108 {
+    -id: int
+    -mave: String
+}
+
+class TKDoanhthu108 {
+    -tongdoanhthu: float
+}
+
+class TKKhachhang108 {
+    -tongsokhachhang: int
+}
+
+Thanhvien108 *-- Hoten108
+Nhanvien108 --|> Thanhvien108
+Khachhang108 --|> Thanhvien108
+NVQuanLy108 --|> Nhanvien108
+NVBanHang108 --|> Nhanvien108
+
+Khachhang108 "1" -- "0..1" Thethanhvien108
+Rapchieuphim108 "1" *-- "1..*" Phongchieu108
+Phongchieu108 "1" *-- "1..*" Ghe108
+Phim108 "1" -- "0..*" Suatchieu108
+Phongchieu108 "1" -- "0..*" Suatchieu108
+
+Suatchieu108 "1" -- "0..*" Ve108
+Ghe108 "1" -- "0..*" Ve108
+Hoadon108 "1" *-- "1..*" Ve108
+
+Hoadon108 --|> TKDoanhthu108
+Khachhang108 --|> TKKhachhang108
+
+NVBanHang108 "1" -- "0..*" Hoadon108
+Khachhang108 "1" -- "0..*" Hoadon108
+@enduml

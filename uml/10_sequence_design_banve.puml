@@ -1,0 +1,149 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+
+title BIỂU ĐỒ TRÌNH TỰ THIẾT KẾ CHI TIẾT (DESIGN SEQUENCE DIAGRAM)\nCA SỬ DỤNG: BÁN VÉ TẠI QUẦY
+
+actor "Nhân viên Bán hàng" as NV
+boundary "view: BanVeFrm" as View
+control "ctrl: BanVeController" as Ctrl
+participant "phimDAO: PhimDAO" as PhimDAO
+participant "lichDAO: LichChieuDAO" as LichDAO
+participant "gheDAO: GheDAO" as GheDAO
+participant "theDAO: TheThanhVienDAO" as TheDAO
+participant "hdDAO: HoaDonDAO" as HdDAO
+participant "veDAO: VeDAO" as VeDAO
+database "db: DBConnection" as DB
+
+NV -> View : nhap tuKhoa + click btnTimPhim()
+activate View
+View -> Ctrl : timKiemPhim(tuKhoa)
+activate Ctrl
+Ctrl -> PhimDAO : timPhim(tuKhoa)
+activate PhimDAO
+PhimDAO -> DB : executeQuery("SELECT * FROM tblPhim WHERE tenPhim LIKE...")
+activate DB
+DB --> PhimDAO : ResultSet
+deactivate DB
+PhimDAO --> Ctrl : List<Phim>
+deactivate PhimDAO
+Ctrl --> View : List<Phim>
+deactivate Ctrl
+View --> NV : hienThiDanhSachPhim()
+
+NV -> View : onPhimSelected(idPhim)
+View -> Ctrl : chonPhim(idPhim)
+activate Ctrl
+Ctrl -> LichDAO : layLichTheoPhim(idPhim)
+activate LichDAO
+LichDAO -> DB : executeQuery("SELECT * FROM tblLichChieu WHERE idPhim =...")
+activate DB
+DB --> LichDAO : ResultSet
+deactivate DB
+LichDAO --> Ctrl : List<LichChieu>
+deactivate LichDAO
+Ctrl --> View : List<LichChieu>
+deactivate Ctrl
+View --> NV : hienThiCacKhungGio()
+
+NV -> View : onSuatChieuSelected(idLich)
+View -> Ctrl : chonSuatChieu(idLich)
+activate Ctrl
+Ctrl -> GheDAO : layGheTheoPhong(idPhong)
+activate GheDAO
+GheDAO -> DB : executeQuery("SELECT * FROM tblGhe WHERE idPhong =...")
+activate DB
+DB --> GheDAO : List<Ghe>
+deactivate DB
+GheDAO --> Ctrl : List<Ghe>
+deactivate GheDAO
+Ctrl -> GheDAO : layTrangThaiGhe(idLich)
+activate GheDAO
+GheDAO -> DB : executeQuery("SELECT idGhe FROM tblVe WHERE idLichChieu =...")
+activate DB
+DB --> GheDAO : Set<idGheDaDat>
+deactivate DB
+GheDAO --> Ctrl : Map<Integer, String>
+deactivate GheDAO
+Ctrl --> View : Map<Ghe, TrangThai>
+deactivate Ctrl
+View --> NV : hienThiSoDoGhe(MaTranGhe)
+
+NV -> View : onGheSelected(dsIdGhe)
+View -> Ctrl : tinhTien(idLich, dsIdGhe, maThe=null)
+activate Ctrl
+Ctrl --> View : Map(tongGoc, giamGia=0, thanhTien)
+deactivate Ctrl
+View --> NV : hienThiTamTinh()
+
+opt Khách hàng có Thẻ thành viên
+    NV -> View : nhap maThe + click btnApDungThe()
+    View -> Ctrl : tinhTien(idLich, dsIdGhe, maThe)
+    activate Ctrl
+    Ctrl -> TheDAO : timTheoMa(maThe)
+    activate TheDAO
+    TheDAO -> DB : executeQuery("SELECT * FROM tblTheThanhVien WHERE maThe =...")
+    activate DB
+    DB --> TheDAO : ResultSet
+    deactivate DB
+    TheDAO --> Ctrl : TheThanhVien
+    deactivate TheDAO
+    Ctrl -> Ctrl : tinhChietKhau(theThanhVien, tongGoc)
+    Ctrl --> View : Map(tongGoc, giamGia, thanhTien)
+    deactivate Ctrl
+    View --> NV : capNhatTienSauGiamGia()
+end
+
+NV -> View : chon PTTT + click btnThanhToan()
+View -> Ctrl : xacNhanThanhToan(idLich, dsIdGhe, maThe, pttt, idNV)
+activate Ctrl
+
+Ctrl -> DB : setAutoCommit(false) [Transaction Start]
+activate DB
+deactivate DB
+
+Ctrl -> HdDAO : taoHoaDon(hd)
+activate HdDAO
+HdDAO -> DB : executeUpdate("INSERT INTO tblHoaDon...")
+activate DB
+DB --> HdDAO : idHoaDonMoi
+deactivate DB
+HdDAO --> Ctrl : idHoaDonMoi
+deactivate HdDAO
+
+loop Tung idGhe in dsIdGhe
+    Ctrl -> VeDAO : taoVe(ve, idHoaDonMoi)
+    activate VeDAO
+    VeDAO -> DB : executeUpdate("INSERT INTO tblVe (idLich, idGhe, gia, idHD)...")
+    activate DB
+    DB --> VeDAO : true
+    deactivate DB
+    VeDAO --> Ctrl : true
+    deactivate VeDAO
+end
+
+opt maThe != null
+    Ctrl -> TheDAO : capNhatDiem(maThe, diemMoi)
+    activate TheDAO
+    TheDAO -> DB : executeUpdate("UPDATE tblTheThanhVien SET diem =...")
+    activate DB
+    DB --> TheDAO : true
+    deactivate DB
+    TheDAO --> Ctrl : true
+    deactivate TheDAO
+end
+
+Ctrl -> DB : commit() [Transaction Complete]
+activate DB
+deactivate DB
+
+Ctrl --> View : return HoaDonDetail(hd, dsVe)
+deactivate Ctrl
+
+View -> View : inVeVaHoaDon(HoaDonDetail)
+View --> NV : inThanhCongVaXuatHoaDon()
+deactivate View
+
+@enduml

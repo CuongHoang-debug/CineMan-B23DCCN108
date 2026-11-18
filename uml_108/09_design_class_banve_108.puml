@@ -1,0 +1,92 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+package "view (JSP)" {
+    class GDChinhNVBH108_jsp {
+        -subBanVe
+    }
+    class GDChonPhim108_jsp {
+        -inoutChonPhim
+        -subTiepTuc
+    }
+    class GDChonSuatChieu108_jsp {
+        -outTenPhim
+        -inoutChonSuatChieu
+        -subTiepTuc
+    }
+    class GDChonGhe108_jsp {
+        -inoutDanhSachGhe
+        -subTiepTuc
+    }
+    class GDThanhToan108_jsp {
+        -outThongTinVe
+        -inPhuongThucThanhToan
+        -inNhapMathethanhvien
+        -subThanhToan
+    }
+}
+
+package "dao" {
+    class DAO {
+        -con: Connection
+        +DAO()
+    }
+    class Phim108DAO {
+        +getPhim(): List<Phim108>
+    }
+    class SuatChieu108DAO {
+        +getSuatChieuByPhim(idPhim: int): List<Suatchieu108>
+    }
+    class PhongChieu108DAO {
+        +getPhongChieuBySuatChieu(idSC: int): Phongchieu108
+    }
+    class Ghe108DAO {
+        +getGheByPhongChieu(idPC: int): List<Ghe108>
+    }
+    class HoaDon108DAO {
+        +luuHoaDon(hd: Hoadon108): int
+    }
+    class Ve108DAO {
+        +luuVe(ve: Ve108): boolean
+    }
+    class TheThanhVien108DAO {
+        +timThe(maThe: String): Thethanhvien108
+    }
+}
+
+package "model" {
+    class Phim108
+    class Suatchieu108
+    class Phongchieu108
+    class Ghe108
+    class Hoadon108
+    class Ve108
+    class Thethanhvien108
+}
+
+Phim108DAO --|> DAO
+SuatChieu108DAO --|> DAO
+PhongChieu108DAO --|> DAO
+Ghe108DAO --|> DAO
+HoaDon108DAO --|> DAO
+Ve108DAO --|> DAO
+TheThanhVien108DAO --|> DAO
+
+GDChonPhim108_jsp ..> Phim108DAO
+GDChonSuatChieu108_jsp ..> SuatChieu108DAO
+GDChonGhe108_jsp ..> PhongChieu108DAO
+GDChonGhe108_jsp ..> Ghe108DAO
+GDThanhToan108_jsp ..> HoaDon108DAO
+GDThanhToan108_jsp ..> Ve108DAO
+GDThanhToan108_jsp ..> TheThanhVien108DAO
+
+Phim108DAO ..> Phim108
+SuatChieu108DAO ..> Suatchieu108
+PhongChieu108DAO ..> Phongchieu108
+Ghe108DAO ..> Ghe108
+HoaDon108DAO ..> Hoadon108
+Ve108DAO ..> Ve108
+TheThanhVien108DAO ..> Thethanhvien108
+@enduml

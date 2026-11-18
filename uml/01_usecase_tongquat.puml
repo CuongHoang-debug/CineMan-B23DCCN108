@@ -1,0 +1,90 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+skinparam usecase {
+    BackgroundColor #E8F4F8
+    BorderColor #2B7A78
+    ArrowColor #17252A
+    FontColor #17252A
+}
+skinparam actor {
+    BackgroundColor #DEF2F1
+    BorderColor #2B7A78
+    FontColor #17252A
+}
+
+title SƠ ĐỒ CA SỬ DỤNG TỔNG QUÁT (USE CASE DIAGRAM) - HỆ THỐNG CINEMAN
+
+actor "Khách hàng" as KH
+actor "Nhân viên\nBán hàng" as NVBH
+actor "Nhân viên\nQuản lý" as NVQL
+
+rectangle "Hệ thống Quản lý Rạp Chiếu Phim CineMan" {
+    ' Ca su dung chung
+    usecase "UC00: Đăng nhập hệ thống" as UC_Login
+    usecase "UC00b: Đăng xuất" as UC_Logout
+
+    ' Ca su dung Khach hang
+    package "Phân hệ Khách hàng" {
+        usecase "UC01: Đăng ký thành viên" as UC_DangKy
+        usecase "UC02: Tìm kiếm phim & lịch chiếu" as UC_TimPhim
+        usecase "UC03: Mua vé trực tuyến" as UC_MuaVeOnline
+    }
+
+    ' Ca su dung Nhan vien Ban hang
+    package "Phân hệ Bán vé & Dịch vụ" {
+        usecase "UC04: Bán vé tại quầy" as UC_BanVe
+        usecase "UC04.1: Tìm & Chọn phim" as UC_ChonPhim
+        usecase "UC04.2: Chọn suất chiếu" as UC_ChonSuat
+        usecase "UC04.3: Chọn ghế ngồi" as UC_ChonGhe
+        usecase "UC04.4: Thanh toán & In vé" as UC_ThanhToan
+        usecase "UC04.5: Áp dụng thẻ thành viên" as UC_ApDungThe
+        usecase "UC05: Xuất thẻ thành viên tại quầy" as UC_XuatThe
+    }
+
+    ' Ca su dung Nhan vien Quan ly
+    package "Phân hệ Quản lý & Thống kê" {
+        usecase "UC06: Quản lý thông tin phim" as UC_QLPhim
+        usecase "UC07: Quản lý phòng chiếu" as UC_QLPhong
+        usecase "UC08: Lên lịch chiếu phim" as UC_LenLich
+        usecase "UC09: Xem thống kê báo cáo" as UC_XemThongKe
+        usecase "UC09.1: Thống kê doanh thu" as UC_TKDoanhThu
+        usecase "UC09.2: Thống kê phim" as UC_TKPhim
+        usecase "UC09.3: Thống kê khách hàng" as UC_TKKhachHang
+    }
+}
+
+' Quan he giua Actor va Use Case
+KH --> UC_Login
+KH --> UC_DangKy
+KH --> UC_TimPhim
+KH --> UC_MuaVeOnline
+
+NVBH --> UC_Login
+NVBH --> UC_Logout
+NVBH --> UC_BanVe
+NVBH --> UC_XuatThe
+
+NVQL --> UC_Login
+NVQL --> UC_Logout
+NVQL --> UC_QLPhim
+NVQL --> UC_QLPhong
+NVQL --> UC_LenLich
+NVQL --> UC_XemThongKe
+
+' Quan he include va extend trong Ban ve tai quay
+UC_BanVe ..> UC_ChonPhim : <<include>>
+UC_BanVe ..> UC_ChonSuat : <<include>>
+UC_BanVe ..> UC_ChonGhe : <<include>>
+UC_BanVe ..> UC_ThanhToan : <<include>>
+UC_ApDungThe ..> UC_BanVe : <<extend>>
+
+' Quan he include trong Thong ke
+UC_XemThongKe ..> UC_TKDoanhThu : <<include>>
+UC_XemThongKe ..> UC_TKPhim : <<include>>
+UC_XemThongKe ..> UC_TKKhachHang : <<include>>
+
+@enduml

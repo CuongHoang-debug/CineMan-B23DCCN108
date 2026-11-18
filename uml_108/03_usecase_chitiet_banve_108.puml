@@ -1,0 +1,31 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam actorStyle awesome
+
+actor "Thành viên hệ thống" as TV
+actor "Nhân viên bán hàng" as NVBH
+actor "Khách hàng" as KH
+
+NVBH -up-|> TV
+
+rectangle "Phân hệ Bán vé tại quầy" {
+    usecase "Đăng nhập 108" as UC_Login
+    usecase "Bán vé tại quầy 108" as UC_BV
+    usecase "chọn phim 108" as UC_Phim
+    usecase "chọn giờ 108" as UC_Gio
+    usecase "chọn ghế 108" as UC_Ghe
+    usecase "nhập mã khách hàng 108" as UC_MaKH
+    usecase "thanh toán 108" as UC_TT
+}
+
+NVBH --> UC_BV
+KH --> UC_BV
+
+UC_BV ..> UC_Login : <<Include>>
+UC_BV ..> UC_Phim : <<Include>>
+UC_BV ..> UC_Gio : <<Include>>
+UC_BV ..> UC_Ghe : <<Include>>
+UC_BV ..> UC_TT : <<Include>>
+UC_MaKH .up.> UC_BV : <<Extend>>
+@enduml

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Dữ liệu CSDL SQLite - CineMan{% endblock %}
+
+{% block content %}
+<div class="card card-custom p-4 my-3">
+    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom border-secondary pb-3">
+        <div>
+            <h4 class="fw-bold text-success mb-1">
+                <i class="fa-solid fa-database me-2"></i>Minh Chứng Dữ Liệu Lưu Trong CSDL SQLite (cineman.db)
+            </h4>
+            <span class="text-secondary small">Truy vấn: <code>SELECT tblNguoiDung, tblKhachHang, tblTheThanhVien</code></span>
+        </div>
+        <span class="badge bg-success p-2">Trạng thái CSDL: KẾT NỐI & ĐỒNG BỘ THÀNH CÔNG</span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-hover table-bordered border-secondary align-middle small mb-0">
+            <thead class="table-secondary text-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Họ và Tên</th>
+                    <th>Số Điện Thoại</th>
+                    <th>Email</th>
+                    <th>Số CCCD</th>
+                    <th>Ngày Sinh</th>
+                    <th>Mã Thẻ Thành Viên</th>
+                    <th>Hạng Thẻ</th>
+                    <th class="text-center">Điểm Tích Lũy</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in rows %}
+                <tr>
+                    <td class="text-center">#{{ r.id }}</td>
+                    <td><strong class="text-light">{{ r.hoTen }}</strong></td>
+                    <td><code class="text-info">{{ r.sdt }}</code></td>
+                    <td>{{ r.email }}</td>
+                    <td>{{ r.cccd }}</td>
+                    <td>{{ r.ngaySinh }}</td>
+                    <td><span class="badge bg-dark border border-warning text-warning fw-bold">{{ r.maThe }}</span></td>
+                    <td>
+                        {% if r.hangThe == 'VIP' %}
+                            <span class="badge badge-vip">VIP</span>
+                        {% elif r.hangThe == 'Gold' %}
+                            <span class="badge bg-warning text-dark">Gold</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ r.hangThe }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center text-success fw-bold">{{ r.diemTichLuy }} pts</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="alert alert-dark border-secondary small mt-3 mb-0">
+        <i class="fa-solid fa-circle-check text-success me-2"></i>
+        Dữ liệu trên chứng minh chức năng <strong>Khách hàng đăng ký thành viên</strong> đã thực hiện đầy đủ giao dịch lưu thông tin cá nhân và tự động cấp thẻ thành viên vào CSDL SQLite theo đúng yêu cầu đề bài.
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,96 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class GDChinhNVBH108 <<boundary>> {
+    -subBanVe: submit
+}
+
+class GDChonPhim108 <<boundary>> {
+    -moutChonPhim: in/out
+    -moutChonSuatChieu: in/out
+    -subTiepTuc: submit
+}
+
+class GDChonSuatChieu108 <<boundary>> {
+    -outTenPhim: output
+    -moutChonSuatChieu: in/out
+    -subTiepTuc: submit
+}
+
+class GDChonGhe108 <<boundary>> {
+    -moutDanhSachGhe: in/out
+    -subTiepTuc: submit
+}
+
+class GDThanhToan108 <<boundary>> {
+    -outThongTinVe: output
+    -inPhuongThucThanhToan: input
+    -inNhapMathethanhvien: input
+    -subThanhToan: submit
+}
+
+class Phim108 <<entity>> {
+    -tenphim: String
+    -theloai: String
+    -daodien: String
+    -thoiluong: int
+    -mota: String
+    +getphim()
+}
+
+class Suatchieu108 <<entity>> {
+    -tgbatdau: dateTime
+    -tgketthuc: dateTime
+    -ngaychieu: date
+    -giochieu: dateTime
+    +getsuatchieu()
+}
+
+class Ghe108 <<entity>> {
+    -maghe: String
+    -trangthai: boolean
+    +getghetrong()
+}
+
+class Hoadon108 <<entity>> {
+    -mahoadon: String
+    -ngay: date
+    -tongtien: float
+    -trangthai: boolean
+    +getTTHoaDon()
+    +ThanhToan()
+    +luuHoaDon()
+}
+
+class Ve108 <<entity>> {
+    -mave: String
+}
+
+class Thethanhvien108 <<entity>> {
+    -mathe: String
+    -cappdo: String
+    -diem: int
+}
+
+class Khachhang108 <<entity>> {
+}
+
+GDChinhNVBH108 ..> GDChonPhim108
+GDChonPhim108 ..> GDChonSuatChieu108
+GDChonSuatChieu108 ..> GDChonGhe108
+GDChonGhe108 ..> GDThanhToan108
+
+GDChonPhim108 ..> Phim108 : getphim()
+GDChonSuatChieu108 ..> Suatchieu108 : getsuatchieu()
+GDChonGhe108 ..> Ghe108 : getghetrong()
+GDThanhToan108 ..> Hoadon108 : ThanhToan()
+
+Phim108 "1" -- "0..*" Suatchieu108
+Suatchieu108 "1" -- "0..*" Ve108
+Ghe108 "1" -- "0..*" Ve108
+Hoadon108 "1" *-- "1..*" Ve108
+Khachhang108 "1" -- "0..1" Thethanhvien108
+Thethanhvien108 ..> GDThanhToan108
+@enduml

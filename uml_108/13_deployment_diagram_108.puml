@@ -1,0 +1,19 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+node "<<device>>\nClient" as Client #EBF5FB {
+    artifact "Web browser\nHTML\nJavaScript"
+}
+
+node "Application Server" as AppServer #E8F8F5 {
+    artifact "Web server\nHTTP\nPython / Java"
+}
+
+database "Database Server" as DBServer #FEF9E7 {
+    artifact "DBMS\nSQLite / MySQL"
+}
+
+Client -- AppServer : HTTP
+AppServer -- DBServer : SQL Connection
+@enduml

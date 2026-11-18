@@ -1,0 +1,44 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+actor "Nhân viên / Khách hàng" as Actor
+boundary "GDChinhNVBH108" as GDChinh
+boundary "GDChonPhim108" as GDPhim
+boundary "GDChonSuatChieu108" as GDLich
+boundary "GDChonGhe108" as GDGhe
+boundary "GDThanhToan108" as GDTT
+
+entity "Phim108" as EPhim
+entity "Suatchieu108" as ELich
+entity "Ghe108" as EGhe
+entity "Hoadon108" as EHD
+
+Actor -> GDChinh : 1: Click bán vé
+GDChinh -> GDPhim : 2: Gọi
+GDPhim -> EPhim : 3: Gọi getphim()
+EPhim -> GDPhim : 4: Trả về DS phim
+GDPhim -> Actor : 5: Hiển thị
+Actor -> GDPhim : 6: Click chọn phim
+
+GDPhim -> GDLich : 7: Gọi
+GDLich -> ELich : 8: Gọi getSuatChieu()
+ELich -> GDLich : 9: Trả về DS suất chiếu
+GDLich -> Actor : 10: Hiển thị
+Actor -> GDLich : 11: Click chọn suất chiếu
+
+GDLich -> GDGhe : 12: Gọi
+GDGhe -> EGhe : 13: Gọi getghetrong()
+EGhe -> GDGhe : 14: Trả về sơ đồ ghế
+GDGhe -> Actor : 15: Hiển thị
+Actor -> GDGhe : 16: Click chọn ghế
+
+GDGhe -> GDTT : 17: Gọi
+GDTT -> EHD : 18: Gọi getTTHoaDon()
+EHD -> GDTT : 19: Trả về thông tin
+GDTT -> Actor : 20: Hiển thị
+Actor -> GDTT : 21: Nhập thẻ & Click thanh toán
+GDTT -> EHD : 22: ThanhToan(), luuHoaDon()
+EHD -> GDTT : 23: Trả về kết quả
+GDTT -> Actor : 24: Thông báo thành công & in vé
+@enduml

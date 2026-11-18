@@ -1,0 +1,17 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam actorStyle awesome
+
+actor "Khách hàng" as KH
+
+rectangle "Phân hệ Đăng ký thành viên" {
+    usecase "Đăng ký thành viên 108" as UC_DK
+    usecase "Nhập thông tin cá nhân 108" as UC_NhapTT
+    usecase "Lưu CSDL & Cấp thẻ 108" as UC_CapThe
+}
+
+KH --> UC_DK
+UC_DK ..> UC_NhapTT : <<Include>>
+UC_DK ..> UC_CapThe : <<Include>>
+@enduml

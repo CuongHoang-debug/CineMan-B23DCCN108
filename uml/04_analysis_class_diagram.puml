@@ -1,0 +1,205 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor #FFFFFF
+    BorderColor #2B7A78
+    ArrowColor #17252A
+}
+
+title BIỂU ĐỒ LỚP PHÂN TÍCH (ANALYSIS CLASS DIAGRAM) - HỆ THỐNG CINEMAN
+
+package "Lớp Biên (Boundary Classes)" {
+    class FormDangNhap <<boundary>> {
+        + hienThi()
+        + nhanThongTinDangNhap()
+        + hienThiThongBao()
+    }
+    class FormDangKyThanhVien <<boundary>> {
+        + hienThiForm()
+        + nhanThongTinDangKy()
+        + hienThiThanhCong()
+        + hienThiLoi()
+    }
+    class FormBanVeTaiQuay <<boundary>> {
+        + hienThi()
+        + nhapTenPhim()
+        + hienThiDSPhim()
+        + hienThiSuatChieu()
+        + hienThiSoDoGhe()
+        + nhapMaTheThanhVien()
+        + xacNhanThanhToan()
+        + inVeVaHoaDon()
+    }
+    class FormQuanLyPhim <<boundary>> {
+        + hienThiDSPhim()
+        + formThemPhim()
+        + formSuaPhim()
+        + xacNhanXoaPhim()
+    }
+    class FormQuanLyPhongChieu <<boundary>> {
+        + hienThiDSPhong()
+        + formThemPhong()
+        + formSuaPhong()
+    }
+    class FormLichChieu <<boundary>> {
+        + hienThiDSLichChieu()
+        + formTaoLichChieu()
+    }
+    class FormThongKe <<boundary>> {
+        + chonKhoangThoiGian()
+        + hienThiBaoCaoDoanhThu()
+        + hienThiBaoCaoPhim()
+        + hienThiBaoCaoKhachHang()
+    }
+}
+
+package "Lớp Điều Khiển (Control Classes)" {
+    class DangNhapCtrl <<control>> {
+        + xacThucNguoiDung()
+    }
+    class DangKyCtrl <<control>> {
+        + kiemTraThongTin()
+        + xuLyDangKy()
+    }
+    class BanVeCtrl <<control>> {
+        + timPhim()
+        + laySuatChieu()
+        + laySoDoGhe()
+        + kiemTraThe()
+        + tinhTien()
+        + xuLyThanhToan()
+    }
+    class PhimCtrl <<control>> {
+        + themPhim()
+        + suaPhim()
+        + xoaPhim()
+    }
+    class PhongChieuCtrl <<control>> {
+        + themPhong()
+        + suaPhong()
+    }
+    class LichChieuCtrl <<control>> {
+        + taolichChieu()
+        + kiemTraTrungGio()
+    }
+    class ThongKeCtrl <<control>> {
+        + thongKeDoanhThu()
+        + thongKePhim()
+        + thongKeKhachHang()
+    }
+}
+
+package "Lớp Thực Thể (Entity Classes)" {
+    abstract class NguoiDung <<entity>> {
+        # maND: String
+        # hoTen: String
+        # sdt: String
+        # email: String
+        # matKhau: String
+    }
+
+    class NhanVien <<entity>> {
+        - maNV: String
+        - chucVu: String
+        - caLamViec: String
+    }
+
+    class KhachHang <<entity>> {
+        - maKH: String
+        - cccd: String
+        - ngaySinh: Date
+        - diaChi: String
+    }
+
+    class TheThanhVien <<entity>> {
+        - maThe: String
+        - ngayCap: Date
+        - hangThe: String
+        - diemTichLuy: int
+        - trangThai: String
+    }
+
+    class Phim <<entity>> {
+        - maPhim: String
+        - tenPhim: String
+        - theLoai: String
+        - thoiLuong: int
+        - daoDien: String
+        - doTuoi: String
+        - poster: String
+        - trangThai: String
+    }
+
+    class PhongChieu <<entity>> {
+        - maPhong: String
+        - tenPhong: String
+        - loaiPhong: String
+        - tongSoGhe: int
+    }
+
+    class Ghe <<entity>> {
+        - maGhe: String
+        - soHang: String
+        - soCot: int
+        - loaiGhe: String
+        - phuThu: float
+    }
+
+    class LichChieu <<entity>> {
+        - maLichChieu: String
+        - ngayChieu: Date
+        - gioBatDau: Time
+        - gioKetThuc: Time
+        - giaVeGoc: float
+    }
+
+    class Ve <<entity>> {
+        - maVe: String
+        - giaBan: float
+        - ngayBan: DateTime
+        - trangThai: String
+    }
+
+    class HoaDon <<entity>> {
+        - maHD: String
+        - ngayLap: DateTime
+        - tongTien: float
+        - giamGia: float
+        - thanhTien: float
+        - phuongThucTT: String
+    }
+}
+
+' Ke thua Nguoi dung
+NguoiDung <|-- NhanVien
+NguoiDung <|-- KhachHang
+
+' Quan he giua cac thuc the
+KhachHang "1" *-- "1" TheThanhVien : sở hữu >
+PhongChieu "1" *-- "1..*" Ghe : có >
+Phim "1" -- "0..*" LichChieu : được chiếu >
+PhongChieu "1" -- "0..*" LichChieu : diễn ra tại >
+LichChieu "1" -- "0..*" Ve : phát hành >
+Ghe "1" -- "0..*" Ve : gắn với >
+HoaDon "1" *-- "1..*" Ve : gồm có >
+NhanVien "1" -- "0..*" HoaDon : lập >
+KhachHang "0..1" -- "0..*" HoaDon : thanh toán >
+
+' Lien ket giua Boundary va Control
+FormDangKyThanhVien ..> DangKyCtrl : yêu cầu
+FormBanVeTaiQuay ..> BanVeCtrl : yêu cầu
+FormThongKe ..> ThongKeCtrl : yêu cầu
+
+' Lien ket giua Control va Entity
+DangKyCtrl ..> KhachHang : tạo
+DangKyCtrl ..> TheThanhVien : cấp
+BanVeCtrl ..> Phim : đọc
+BanVeCtrl ..> LichChieu : đọc
+BanVeCtrl ..> Ghe : đọc / cập nhật
+BanVeCtrl ..> TheThanhVien : kiểm tra / tích điểm
+BanVeCtrl ..> HoaDon : tạo
+BanVeCtrl ..> Ve : tạo
+
+@enduml

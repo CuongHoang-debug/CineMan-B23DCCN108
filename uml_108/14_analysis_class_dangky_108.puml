@@ -1,0 +1,42 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class GDChinh108 <<boundary>> {
+    -subDangKyThanhVien: submit
+}
+
+class GDDangKy108 <<boundary>> {
+    -inHoTen: input
+    -inSDT: input
+    -inEmail: input
+    -inCCCD: input
+    -inMatKhau: input
+    -subLuu: submit
+}
+
+class GDKetQuaDangKy108 <<boundary>> {
+    -textThongBao: output
+    -subQuayLai: submit
+}
+
+class Khachhang108 <<entity>> {
+    -maKH: String
+    -cccd: String
+    -diachi: String
+    +themKhachHangMoi()
+}
+
+class Thethanhvien108 <<entity>> {
+    -maThe: String
+    -diem: int
+    +taoTheThanhVien()
+}
+
+GDChinh108 ..> GDDangKy108
+GDDangKy108 ..> GDKetQuaDangKy108
+GDDangKy108 ..> Khachhang108 : themKhachHangMoi()
+GDDangKy108 ..> Thethanhvien108 : taoTheThanhVien()
+Khachhang108 "1" *-- "1" Thethanhvien108
+@enduml

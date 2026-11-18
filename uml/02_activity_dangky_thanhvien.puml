@@ -1,0 +1,67 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam activity {
+    BackgroundColor #E8F4F8
+    BorderColor #2B7A78
+    FontColor #17252A
+    DiamondBackgroundColor #DEF2F1
+    DiamondBorderColor #2B7A78
+}
+
+title SƠ ĐỒ HOẠT ĐỘNG (ACTIVITY DIAGRAM) - CA SỬ DỤNG: ĐĂNG KÝ THÀNH VIÊN
+
+|#E8F8F5|Khách hàng|
+|#EBF5FB|Giao diện CineMan|
+|#FEF9E7|Hệ thống (Controller & CSDL)|
+
+|Khách hàng|
+start
+:Truy cập hệ thống và chọn\n"Đăng ký thành viên";
+
+|Giao diện CineMan|
+:Hiển thị Form Đăng ký thành viên\n(Họ tên, SĐT, Email, CCCD, Mật khẩu, Ngày sinh);
+
+|Khách hàng|
+:Nhập đầy đủ thông tin cá nhân;
+:Nhấn nút "Đăng ký";
+
+|Giao diện CineMan|
+:Thu thập dữ liệu từ Form;
+:Gửi yêu cầu đăng ký tới Hệ thống;
+
+|Hệ thống (Controller & CSDL)|
+:Kiểm tra tính hợp lệ dữ liệu\n(Format email, độ dài SĐT, mật khẩu);
+if (Dữ liệu hợp lệ?) then (Không)
+    |Giao diện CineMan|
+    :Hiển thị thông báo lỗi nhập liệu;
+    |Khách hàng|
+    :Nhập lại thông tin đúng định dạng;
+    detach
+else (Có)
+    |Hệ thống (Controller & CSDL)|
+    :Truy vấn CSDL kiểm tra trùng\nlặp Số điện thoại / Email / CCCD;
+    if (Đã tồn tại trong hệ thống?) then (Có trùng)
+        |Giao diện CineMan|
+        :Thông báo lỗi: SĐT hoặc Email\nhoặc CCCD đã được đăng ký;
+        |Khách hàng|
+        :Kiểm tra lại thông tin;
+        detach
+    else (Không trùng)
+        |Hệ thống (Controller & CSDL)|
+        :Mã hóa mật khẩu người dùng;
+        :Khởi tạo thực thể Khách hàng mới;
+        :Tự động sinh Mã thẻ thành viên (MEMBER-XXXX);\nKhởi tạo Hạng thẻ = "Standard", Điểm = 0;
+        :Lưu thông tin Khách hàng và\nThẻ thành viên vào Cơ sở dữ liệu;
+        
+        |Giao diện CineMan|
+        :Hiển thị thông báo: "Đăng ký thành công!";
+        :Hiển thị thông tin Thẻ thành viên được cấp;
+        
+        |Khách hàng|
+        :Nhận mã thẻ và hoàn tất đăng ký;
+        stop
+    endif
+endif
+
+@enduml

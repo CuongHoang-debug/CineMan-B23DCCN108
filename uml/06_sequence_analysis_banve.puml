@@ -1,0 +1,97 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+
+title BIỂU ĐỒ TRÌNH TỰ PHÂN TÍCH (ANALYSIS SEQUENCE DIAGRAM)\nCA SỬ DỤNG: BÁN VÉ TẠI QUẦY
+
+actor "Nhân viên Bán hàng" as NV
+boundary "FormBanVeTaiQuay" as Form
+control "BanVeCtrl" as Ctrl
+entity "Phim" as EntPhim
+entity "LichChieu" as EntLich
+entity "Ghe" as EntGhe
+entity "TheThanhVien" as EntThe
+entity "HoaDon" as EntHD
+entity "Ve" as EntVe
+
+NV -> Form : chonMenuBanVe()
+activate Form
+Form --> NV : hienThiManHinhBanVe()
+
+NV -> Form : nhapTenPhim(tuKhoa)
+Form -> Ctrl : timKiemPhim(tuKhoa)
+activate Ctrl
+Ctrl -> EntPhim : layDanhSachPhim(tuKhoa)
+activate EntPhim
+EntPhim --> Ctrl : dsPhim
+deactivate EntPhim
+Ctrl --> Form : hienThiDSPhim(dsPhim)
+deactivate Ctrl
+
+NV -> Form : chonPhim(maPhim)
+Form -> Ctrl : laySuatChieu(maPhim)
+activate Ctrl
+Ctrl -> EntLich : laySuatChieuTheoPhim(maPhim)
+activate EntLich
+EntLich --> Ctrl : dsSuatChieu
+deactivate EntLich
+Ctrl --> Form : hienThiDSSuatChieu(dsSuatChieu)
+deactivate Ctrl
+
+NV -> Form : chonSuatChieu(maLichChieu)
+Form -> Ctrl : laySoDoGhe(maLichChieu)
+activate Ctrl
+Ctrl -> EntGhe : layTrangThaiGhe(maLichChieu)
+activate EntGhe
+EntGhe --> Ctrl : dsGheVaTrangThai
+deactivate EntGhe
+Ctrl --> Form : hienThiSoDoGhe(dsGheVaTrangThai)
+deactivate Ctrl
+
+NV -> Form : chonCacGhe(dsMaGhe)
+Form -> Form : capNhatTamTinh()
+
+opt [Khách hàng cung cấp thẻ thành viên]
+    NV -> Form : nhapMaThe(maThe)
+    Form -> Ctrl : kiemTraThongTinThe(maThe)
+    activate Ctrl
+    Ctrl -> EntThe : timThe(maThe)
+    activate EntThe
+    EntThe --> Ctrl : thongTinThe
+    deactivate EntThe
+    Ctrl -> Ctrl : tinhChietKhau(thongTinThe, tongTienTamTinh)
+    Ctrl --> Form : hienThiGiamGia(soTienGiam, tongPhaiTra)
+    deactivate Ctrl
+end
+
+NV -> Form : xacNhanThanhToan(phuongThucTT, soTienNhan)
+Form -> Ctrl : thucHienThanhToan(maLichChieu, dsGhe, maThe, phuongThucTT)
+activate Ctrl
+
+Ctrl -> EntHD : taoHoaDon(tongTien, giamGia, thanhTien, nv, kh)
+activate EntHD
+EntHD --> Ctrl : hoaDonMoi
+deactivate EntHD
+
+loop [Với mỗi ghế được chọn]
+    Ctrl -> EntVe : taoVe(maLichChieu, maGhe, giaVe, hoaDonMoi)
+    activate EntVe
+    EntVe --> Ctrl : veMoi
+    deactivate EntVe
+    Ctrl -> EntGhe : capNhatTrangThaiGhe(maGhe, "ĐÃ BÁN")
+end
+
+opt [Có sử dụng thẻ thành viên]
+    Ctrl -> EntThe : congDiemTichLuy(maThe, diemCong)
+end
+
+Ctrl --> Form : ketQuaGiaoDichThanhCong(hoaDonMoi, dsVe)
+deactivate Ctrl
+
+Form -> Form : goiLenhIn(hoaDon, dsVe)
+Form --> NV : inXongVeVaHoaDon()
+deactivate Form
+
+@enduml

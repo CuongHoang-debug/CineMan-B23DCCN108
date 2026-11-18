@@ -1,0 +1,28 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+package "webapp" {
+    package "modul_1" {
+    }
+    package "modul_2" {
+    }
+}
+
+package "dao" {
+}
+
+package "entity" {
+}
+
+package "util" {
+}
+
+webapp ..> dao : <<import>>
+modul_1 ..> dao : <<import>>
+modul_2 ..> dao : <<import>>
+
+dao ..> entity : <<import>>
+dao ..> util : <<import>>
+@enduml

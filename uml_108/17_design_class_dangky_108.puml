@@ -1,0 +1,48 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+package "view (JSP)" {
+    class GDChinh108_jsp {
+        -subDangKy
+    }
+    class GDDangKy108_jsp {
+        -inHoTen
+        -inSDT
+        -inEmail
+        -inCCCD
+        -inMatKhau
+        -subLuu
+    }
+    class GDKetQuaDangKy108_jsp {
+        -outThongBao
+        -subQuayLai
+    }
+}
+
+package "dao" {
+    class DAO {
+        -con: Connection
+    }
+    class KhachHang108DAO {
+        +themKhachHang(kh: Khachhang108): boolean
+        +kiemTraTrung(sdt: String, email: String): boolean
+    }
+    class TheThanhVien108DAO {
+        +themThe(the: Thethanhvien108): boolean
+    }
+}
+
+package "model" {
+    class Khachhang108
+    class Thethanhvien108
+}
+
+KhachHang108DAO --|> DAO
+TheThanhVien108DAO --|> DAO
+GDDangKy108_jsp ..> KhachHang108DAO
+GDDangKy108_jsp ..> TheThanhVien108DAO
+KhachHang108DAO ..> Khachhang108
+TheThanhVien108DAO ..> Thethanhvien108
+@enduml

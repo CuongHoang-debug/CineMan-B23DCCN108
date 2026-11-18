@@ -1,0 +1,55 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+|#EBF5FB|GDChinhNVBH108.jsp|
+|#E8F8F5|GDChonPhim108.jsp|
+|#FEF9E7|GDChonSuatChieu108.jsp|
+|#F4ECF7|GDChonGhe108.jsp|
+|#FDEDEC|GDThanhToan108.jsp|
+|#F2F4F4|DAO & CSDL|
+
+|GDChinhNVBH108.jsp|
+start
+:Nhận thông tin bán vé;
+:click Bán vé;
+
+|GDChonPhim108.jsp|
+:Lấy danh sách phim;
+|DAO & CSDL|
+:Phim108DAO.getPhim();
+|GDChonPhim108.jsp|
+:Hiển thị danh sách phim;
+:Lưu phim đã chọn vào session;
+:click tiếp tục;
+
+|GDChonSuatChieu108.jsp|
+:Lấy thông tin từ session;
+:Lấy danh sách suất chiếu;
+|DAO & CSDL|
+:SuatChieu108DAO.getSuatChieuByPhim();
+|GDChonSuatChieu108.jsp|
+:Hiển thị danh sách suất chiếu;
+:click chọn tiếp tục;
+
+|GDChonGhe108.jsp|
+:Lấy thông tin suất chiếu từ session;
+:Lấy danh sách ghế;
+|DAO & CSDL|
+:Ghe108DAO.getGheByPhongChieu();
+|GDChonGhe108.jsp|
+:Hiển thị sơ đồ ghế;
+:Chọn ghế, đưa vào session;
+:click tiếp tục;
+
+|GDThanhToan108.jsp|
+:Hiển thị thông tin vé;
+:Nhập mã thẻ thành viên (nếu có);
+:click thanh toán;
+|DAO & CSDL|
+:HoaDon108DAO.luuHoaDon();
+:Ve108DAO.luuVe();
+|GDThanhToan108.jsp|
+:Hiển thị thông báo thành công và in vé;
+stop
+@enduml

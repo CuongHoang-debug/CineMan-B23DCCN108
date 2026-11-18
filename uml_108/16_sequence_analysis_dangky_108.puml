@@ -1,0 +1,33 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor "Khách hàng" as KH
+boundary "GDChinh108" as GD0
+boundary "GDDangKy108" as GD1
+boundary "GDKetQuaDangKy108" as GD2
+entity "Khachhang108" as EKH
+entity "Thethanhvien108" as EThe
+
+KH -> GD0 : 1: Chọn đăng ký
+activate GD0
+GD0 -> GD1 : 2: Gọi
+activate GD1
+GD1 --> KH : 3: Hiển thị form
+KH -> GD1 : 4: Nhập thông tin + click đăng ký
+GD1 -> EKH : 5: themKhachHangMoi()
+activate EKH
+EKH -> EThe : 6: taoTheThanhVien()
+activate EThe
+EThe --> EKH : 7: return theThanhVien
+deactivate EThe
+EKH --> GD1 : 8: return ketQua
+deactivate EKH
+GD1 -> GD2 : 9: Gọi
+activate GD2
+GD2 --> KH : 10: Thông báo thành công & Mã thẻ
+deactivate GD2
+deactivate GD1
+deactivate GD0
+@enduml

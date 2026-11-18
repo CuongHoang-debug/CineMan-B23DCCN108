@@ -1,0 +1,111 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam activity {
+    BackgroundColor #E8F4F8
+    BorderColor #2B7A78
+    FontColor #17252A
+    DiamondBackgroundColor #DEF2F1
+    DiamondBorderColor #2B7A78
+}
+
+title SƠ ĐỒ HOẠT ĐỘNG (ACTIVITY DIAGRAM) - CA SỬ DỤNG: BÁN VÉ TẠI QUẦY
+
+|#E8F8F5|Khách hàng|
+|#FEF9E7|Nhân viên Bán hàng|
+|#EBF5FB|Giao diện CineMan|
+|#FDEDEC|Hệ thống & CSDL|
+
+|Nhân viên Bán hàng|
+start
+:Đăng nhập và chọn menu\n"Bán vé tại quầy";
+
+|Giao diện CineMan|
+:Hiển thị màn hình Bán vé\nvà ô tìm kiếm phim;
+
+|Khách hàng|
+:Yêu cầu tên phim muốn xem;
+
+|Nhân viên Bán hàng|
+:Nhập tên phim vào ô tìm kiếm;
+
+|Giao diện CineMan|
+:Gửi từ khóa tìm kiếm sang Hệ thống;
+
+|Hệ thống & CSDL|
+:Truy vấn CSDL danh sách phim\nđang có lịch chiếu phù hợp;
+
+|Giao diện CineMan|
+:Hiển thị danh sách kết quả phim;
+
+|Nhân viên Bán hàng|
+:Chọn phim khách muốn xem;
+
+|Hệ thống & CSDL|
+:Lấy danh sách các Suất chiếu\ntrong ngày của phim đã chọn;
+
+|Giao diện CineMan|
+:Hiển thị các khung giờ chiếu (Suất chiếu);
+
+|Khách hàng|
+:Chọn khung giờ xem mong muốn;
+
+|Nhân viên Bán hàng|
+:Click chọn Suất chiếu tương ứng;
+
+|Hệ thống & CSDL|
+:Tải sơ đồ phòng chiếu và trạng thái\ncác ghế (Trống / Đã đặt / VIP / Thường);
+
+|Giao diện CineMan|
+:Hiển thị sơ đồ ghế ngồi trực quan;
+
+|Khách hàng|
+:Chọn vị trí các ghế muốn ngồi;
+
+|Nhân viên Bán hàng|
+:Click chọn các vị trí ghế tương ứng;
+:Hỏi khách hàng về Thẻ thành viên;
+
+if (Khách có Thẻ thành viên?) then (Có thẻ)
+    |Nhân viên Bán hàng|
+    :Nhập Mã thẻ thành viên của khách;
+    |Hệ thống & CSDL|
+    :Kiểm tra thông tin Thẻ thành viên;\nTính toán chiết khấu giảm giá (5% - 10%);\nTính điểm tích lũy mới;
+    |Giao diện CineMan|
+    :Hiển thị thông tin chủ thẻ, số tiền giảm\nvà Tổng tiền sau giảm giá;
+else (Không có thẻ)
+    |Giao diện CineMan|
+    :Hiển thị Tổng tiền theo giá gốc;
+endif
+
+|Nhân viên Bán hàng|
+:Thông báo tổng số tiền cần thanh toán;
+
+|Khách hàng|
+:Thực hiện thanh toán\n(Tiền mặt / Chuyển khoản QR / Thẻ);
+
+|Nhân viên Bán hàng|
+:Chọn phương thức thanh toán\nvà nhấn nút "Xác nhận & Xuất vé";
+
+|Hệ thống & CSDL|
+:Bắt đầu giao dịch Transaction:;
+:Cập nhật trạng thái ghế thành "Đã bán";
+:Tạo bản ghi Hóa đơn (tblHoaDon);
+:Tạo các bản ghi Vé (tblVe) tương ứng từng ghế;
+if (Khách có thẻ thành viên?) then (Có)
+    :Cộng điểm tích lũy vào Thẻ thành viên;
+endif
+:Commit giao dịch CSDL;
+
+|Giao diện CineMan|
+:Kích hoạt lệnh in Vé và Hóa đơn;
+
+|Nhân viên Bán hàng|
+:Nhận vé in và hóa đơn từ máy in;
+:Trao vé và hóa đơn cho Khách hàng;
+
+|Khách hàng|
+:Nhận vé xem phim và hóa đơn;
+stop
+
+@enduml

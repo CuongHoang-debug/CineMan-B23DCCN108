@@ -1,0 +1,77 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+title MÔ HÌNH KIẾN TRÚC PHÂN TẦNG (TIERED / MVC ARCHITECTURE)\nHỆ THỐNG CINEMAN
+
+package "Presentation Layer (view)" {
+    class DangNhapFrm
+    class DangKyThanhVienFrm
+    class BanVeFrm
+    class ChonGheFrm
+    class ThanhToanFrm
+    class ThongKeFrm
+}
+
+package "Business Logic Layer (controller)" {
+    class AuthController
+    class KhachHangController
+    class BanVeController
+    class PhimController
+    class ThongKeController
+}
+
+package "Data Access Layer (dao)" {
+    class DBConnection
+    class KhachHangDAO
+    class TheThanhVienDAO
+    class PhimDAO
+    class LichChieuDAO
+    class GheDAO
+    class HoaDonDAO
+    class VeDAO
+    class ThongKeDAO
+}
+
+package "Domain Model Layer (model)" {
+    class KhachHang
+    class TheThanhVien
+    class NhanVien
+    class Phim
+    class PhongChieu
+    class Ghe
+    class LichChieu
+    class HoaDon
+    class Ve
+}
+
+DangNhapFrm ..> AuthController
+DangKyThanhVienFrm ..> KhachHangController
+BanVeFrm ..> BanVeController
+ThongKeFrm ..> ThongKeController
+
+KhachHangController ..> KhachHangDAO
+KhachHangController ..> TheThanhVienDAO
+BanVeController ..> PhimDAO
+BanVeController ..> LichChieuDAO
+BanVeController ..> GheDAO
+BanVeController ..> HoaDonDAO
+BanVeController ..> VeDAO
+ThongKeController ..> ThongKeDAO
+
+KhachHangDAO ..> DBConnection
+PhimDAO ..> DBConnection
+LichChieuDAO ..> DBConnection
+GheDAO ..> DBConnection
+HoaDonDAO ..> DBConnection
+VeDAO ..> DBConnection
+ThongKeDAO ..> DBConnection
+
+DangKyThanhVienFrm ..> KhachHang
+BanVeFrm ..> HoaDon
+BanVeFrm ..> Ve
+BanVeController ..> HoaDon
+BanVeController ..> Ve
+
+@enduml
